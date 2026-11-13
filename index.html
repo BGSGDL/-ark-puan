@@ -508,3 +508,18 @@ checkAuth();
 </script>
 </body>
 </html>
+<!-- Para Yükleme Bilgisi -->
+<div id="depositModal" class="modal hidden">
+    <div class="modal-box">
+        <h2>Para Yükle</h2>
+        <div style="background: rgba(168,85,247,0.15); border: 1px solid #a855f7; padding: 10px; border-radius: 10px; margin-bottom: 10px; font-size: 12px; text-align: left;">
+            <b>Alıcı:</b> Ramazan Yıldırım<br>
+            <b>Banka:</b> <span style="color:#facc15; font-weight:bold;">Yapı Kredi / Diğer</span><br>
+            <b>IBAN:</b> <span style="color:#facc15; font-weight:bold;">TR31 0006 7010 0000 0025 0393 14</span>
+        </div>
+        <input type="number" id="depositAmount" placeholder="Yatırılan Tutar (TL)">
+        <input type="text" id="depositName" placeholder="Gönderen Ad Soyad">
+        <button type="button" onclick="submitDeposit()" class="modal-btn">Gönder</button>
+        <button type="button" onclick="closeModals()" class="modal-btn" style="background:#4b5563; margin-top:4px;">İptal</button>
+    </div>
+</div>
