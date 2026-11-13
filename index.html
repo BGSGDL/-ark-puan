@@ -135,25 +135,25 @@ canvas {
     justify-content: center;
     align-items: center;
     z-index: 100;
-    padding: 20px;
+    padding: 15px;
+    overflow-y: auto;
 }
 .modal-box {
     background: linear-gradient(145deg, #1e1344, #120b29);
     border: 2px solid #a855f7;
     border-radius: 20px;
-    padding: 20px;
+    padding: 18px;
     width: 100%;
-    max-width: 340px;
+    max-width: 320px;
     box-shadow: 0 0 25px rgba(168, 85, 247, 0.6);
     text-align: center;
-    max-height: 85vh;
-    overflow-y: auto;
+    margin: auto;
 }
-.modal-box h2 { margin-top: 0; color: #fde047; font-size: 19px; }
+.modal-box h2 { margin-top: 0; color: #fde047; font-size: 18px; }
 .modal-box input, .modal-box textarea {
     width: 100%;
-    padding: 10px;
-    margin: 6px 0;
+    padding: 9px;
+    margin: 5px 0;
     border-radius: 10px;
     border: 1px solid #6b21a8;
     background: #0f0924;
@@ -162,8 +162,8 @@ canvas {
 }
 .modal-btn {
     width: 100%;
-    padding: 11px;
-    margin-top: 8px;
+    padding: 10px;
+    margin-top: 6px;
     border: none;
     border-radius: 10px;
     font-weight: bold;
@@ -173,7 +173,7 @@ canvas {
     color: white;
 }
 .switch-text {
-    margin-top: 10px;
+    margin-top: 8px;
     font-size: 12px;
     color: #c084fc;
     cursor: pointer;
@@ -182,10 +182,10 @@ canvas {
 .hidden { display: none !important; }
 .history-item {
     background: rgba(255,255,255,0.05);
-    padding: 8px;
-    margin: 5px 0;
+    padding: 6px;
+    margin: 4px 0;
     border-radius: 8px;
-    font-size: 12px;
+    font-size: 11px;
     text-align: left;
     display: flex;
     justify-content: space-between;
@@ -198,5 +198,109 @@ canvas {
     <div class="modal-box">
         <h2 id="authTitle">Kayıt Ol</h2>
         <input type="text" id="usernameInput" placeholder="Kullanıcı Adı" autocomplete="off">
-        <input type="password" id="passwordInput" placeholder="Şif
-            
+        <input type="password" id="passwordInput" placeholder="Şifre">
+        <div id="authError" style="color:#f87171; font-size:11px; margin-top:2px;"></div>
+        <button id="authSubmitBtn" class="modal-btn">Kayıt Ol ve Başla</button>
+        <div id="authSwitch" class="switch-text">Zaten hesabın var mı? Giriş Yap</div>
+    </div>
+</div>
+
+<!-- Para Yükle Modalı -->
+<div id="depositModal" class="modal hidden">
+    <div class="modal-box">
+        <h2>Para Yükle</h2>
+        <p style="font-size:11px; color:#e9d5ff; margin-bottom:8px;">Lütfen aşağıdaki hesaba yatırım yapıp dekont/açıklama giriniz.</p>
+        <div style="background:#0f0924; padding:8px; border-radius:10px; border:1px dashed #a855f7; font-size:11px; margin-bottom:8px; color:#facc15; text-align:left;">
+            <b>Alıcı:</b> Ramazan Yıldırım<br>
+            <b>IBAN:</b> TR31 0006 7010 0000 0025 0393 14
+        </div>
+        <input type="number" id="depositAmount" placeholder="Yatırılan Tutar (TL)">
+        <input type="text" id="depositReceipt" placeholder="Dekont No / İşlem Açıklaması">
+        <button onclick="submitDeposit()" class="modal-btn">Bildirim Gönder</button>
+        <button onclick="closeModals()" class="modal-btn" style="background:#4b5563; margin-top:4px;">İptal</button>
+    </div>
+</div>
+
+<!-- Para Çek Modalı -->
+<div id="withdrawModal" class="modal hidden">
+    <div class="modal-box">
+        <h2>Para Çek</h2>
+        <p style="font-size:11px; color:#e9d5ff; margin-bottom:8px;" id="withdrawInfo">Çekilebilecek Bakiye: 0 TL</p>
+        <input type="number" id="withdrawAmount" placeholder="Çekilecek Tutar (TL)">
+        <input type="text" id="withdrawName" placeholder="Ad Soyad (Hesap Sahibi)" autocomplete="off">
+        <input type="text" id="withdrawIban" placeholder="TR... IBAN Numarası" autocomplete="off">
+        <button onclick="submitWithdraw()" class="modal-btn" style="background:#3b82f6;">Çekim Talebi Ver</button>
+        <button onclick="closeModals()" class="modal-btn" style="background:#4b5563; margin-top:4px;">İptal</button>
+    </div>
+</div>
+
+<!-- Geçmiş Modalı -->
+<div id="historyModal" class="modal hidden">
+    <div class="modal-box">
+        <h2>İşlem Geçmişi</h2>
+        <div id="historyList" style="max-height:160px; overflow-y:auto; margin:8px 0;"></div>
+        <button onclick="closeModals()" class="modal-btn" style="background:#4b5563;">Kapat</button>
+    </div>
+</div>
+
+<div class="header">
+    <div class="balance-box">⭐ <span id="points">0</span> TL</div>
+    <div class="top-buttons">
+        <button class="btn-top btn-deposit" onclick="openModal('depositModal')">Para Yükle</button>
+        <button class="btn-top btn-withdraw" onclick="openModal('withdrawModal')">Para Çek</button>
+        <button class="btn-top btn-history" onclick="openHistory()">Geçmiş</button>
+    </div>
+</div>
+
+<div class="user-bar">
+    <span>👤 Hesap: <b id="activeUser">-</b></span>
+    <button class="logout-btn" onclick="logout()">Çıkış Yap</button>
+</div>
+
+<div>
+    <h1 style="margin:2px 0; color:#fef08a; font-size:22px; text-shadow: 0 0 10px rgba(254,240,138,0.5);">ŞANS ÇARKI</h1>
+</div>
+
+<div class="wheel-container">
+    <div class="pointer"></div>
+    <canvas id="wheel" width="600" height="600"></canvas>
+</div>
+
+<div id="message">Şansını dene, büyük ödüller kazan!</div>
+
+<button id="spin" class="spin-btn">ÇARKI ÇEVİR</button>
+
+<script>
+let users = JSON.parse(localStorage.getItem("wheelUsers") || "{}");
+let currentUser = localStorage.getItem("wheelCurrentUser") || null;
+let isRegisterMode = true;
+
+const authModal = document.getElementById("authModal");
+const authTitle = document.getElementById("authTitle");
+const authSubmitBtn = document.getElementById("authSubmitBtn");
+const authSwitch = document.getElementById("authSwitch");
+const authError = document.getElementById("authError");
+const pointText = document.getElementById("points");
+const activeUserText = document.getElementById("activeUser");
+const message = document.getElementById("message");
+
+function checkAuth() {
+    if (currentUser && users[currentUser]) {
+        authModal.classList.add("hidden");
+        activeUserText.textContent = currentUser;
+        updateBalanceUI();
+    } else {
+        authModal.classList.remove("hidden");
+    }
+}
+
+authSwitch.onclick = () => {
+    isRegisterMode = !isRegisterMode;
+    authError.textContent = "";
+    if (isRegisterMode) {
+        authTitle.textContent = "Kayıt Ol";
+        authSubmitBtn.textContent = "Kayıt Ol ve Başla";
+        authSwitch.textContent = "Zaten hesabın var mı? Giriş Yap";
+    } else {
+        authTitle.textContent =
+    
