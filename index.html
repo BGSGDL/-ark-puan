@@ -124,13 +124,10 @@ canvas {
 <button id="spin" class="spin-btn">ÇARKI ÇEVİR</button>
 
 <script>
-// Resimdeki dilim sırasına göre 20 dilim (saat yönünde)
 const prizes = [100, 50, 20, 10, 10, 5, 5, 1, 1, 1, 1, 1, 1, 5, 5, 10, 10, 20, 50, 100];
 const canvas = document.getElementById("wheel");
 const ctx = canvas.getContext("2d");
 const size = canvas.width, center = size / 2, radius = 280;
-
-// Renk dağılımı resimle uyumlu (Mor, Mavi, Yeşil, Turuncu, Kırmızı)
 const colors = ["#9333ea", "#0ea5e9", "#22c55e", "#f97316", "#ef4444"];
 
 let angle = 0, spinning = false;
@@ -151,7 +148,6 @@ function draw() {
         let start = angle + i * step;
         let end = start + step;
 
-        // Dilim
         ctx.beginPath();
         ctx.moveTo(center, center);
         ctx.arc(center, center, radius, start, end);
@@ -162,7 +158,6 @@ function draw() {
         ctx.lineWidth = 4;
         ctx.stroke();
 
-        // Yazı
         ctx.save();
         ctx.translate(center, center);
         ctx.rotate(start + step / 2);
@@ -175,7 +170,6 @@ function draw() {
         ctx.restore();
     });
 
-    // Orta altın çerçeve
     ctx.beginPath();
     ctx.arc(center, center, 50, 0, Math.PI * 2);
     ctx.fillStyle = "#ca8a04";
@@ -184,7 +178,6 @@ function draw() {
     ctx.lineWidth = 8;
     ctx.stroke();
 
-    // Orta yıldız simgesi
     ctx.fillStyle = "#fde047";
     ctx.font = "bold 30px Arial";
     ctx.textAlign = "center";
@@ -195,21 +188,42 @@ function draw() {
 draw();
 update();
 
+// İstediğin net oranlara göre ayarlanmış kazanan belirleme sistemi
+function getWeightedPrizeIndex() {
+    const rnd = Math.random() * 100;
+    let targetValue = 1;
+
+    if (rnd < 1) {
+        targetValue = 100;    // %1 ihtimal
+    } else if (rnd < 2) {
+        targetValue = 50;     // %1 ihtimal
+    } else if (rnd < 17) {
+        targetValue = 20;     // %15 ihtimal
+    } else if (rnd < 67) {
+        targetValue = 10;     // %50 ihtimal
+    } else if (rnd < 95) {
+        targetValue = 5;      // %75'e denk gelen aralık
+    } else {
+        targetValue = 1;      // %99'a denk gelen ana oran
+    }
+
+    let matchingIndices = [];
+    prizes.forEach((p, idx) => { if (p === targetValue) matchingIndices.push(idx); });
+    return matchingIndices[Math.floor(Math.random() * matchingIndices.length)];
+}
+
 document.getElementById("spin").onclick = () => {
     if (spinning) return;
     spinning = true;
     document.getElementById("spin").disabled = true;
     message.textContent = "Çark dönüyor...";
 
-    const chosen = Math.floor(Math.random() * prizes.length);
+    const chosen = getWeightedPrizeIndex();
     const step = Math.PI * 2 / prizes.length;
-    
-    // Ok en üstte ( - Math.PI / 2 ) olduğu için hedef açı hesaplaması:
     const targetAngle = -Math.PI / 2 - (chosen * step) - (step / 2);
     const extraTurns = 8 * Math.PI * 2;
     const currentAngle = angle;
     
-    // Temiz dönüş mesafesi
     const relativeTarget = (targetAngle % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
     const currentMod = (currentAngle % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
     let diff = relativeTarget - currentMod;
@@ -220,7 +234,7 @@ document.getElementById("spin").onclick = () => {
 
     function animate(now) {
         let t = Math.min(1, (now - begin) / duration);
-        let ease = 1 - Math.pow(1 - t, 4); // Yavaşlayan bitiş efekti
+        let ease = 1 - Math.pow(1 - t, 4);
         angle = currentAngle + (finish - currentAngle) * ease;
         draw();
 
@@ -240,5 +254,4 @@ document.getElementById("spin").onclick = () => {
 };
 </script>
 </body>
-  </html>
-  
+</html>
