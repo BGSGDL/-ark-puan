@@ -128,18 +128,14 @@ canvas {
     color: #facc15;
 }
 
-/* Modaller için Kesin Çözüm: Absolute ve esnek yapı */
 .modal {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    min-height: 100vh;
-    background: rgba(10, 6, 25, 0.96);
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 6, 25, 0.98);
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 9999;
     padding: 20px;
 }
 .modal-box {
@@ -214,8 +210,8 @@ canvas {
         <input type="text" id="usernameInput" placeholder="Kullanıcı Adı" autocomplete="off">
         <input type="password" id="passwordInput" placeholder="Şifre">
         <div id="authError" style="color:#f87171; font-size:11px; margin-top:3px;"></div>
-        <button id="authSubmitBtn" class="modal-btn">Kayıt Ol ve Başla</button>
-        <div id="authSwitch" class="switch-text">Zaten hesabın var mı? Giriş Yap</div>
+        <button id="authSubmitBtn" class="modal-btn" onclick="handleAuth()">Kayıt Ol ve Başla</button>
+        <div id="authSwitch" class="switch-text" onclick="toggleAuthMode()">Zaten hesabın var mı? Giriş Yap</div>
     </div>
 </div>
 
@@ -325,15 +321,15 @@ document.getElementById("depositFile").onchange = (e) => {
 
 function checkAuth() {
     if (currentUser && users[currentUser]) {
-        authModal.classList.add("hidden");
+        authModal.style.display = "none";
         activeUserText.textContent = currentUser;
         updateBalanceUI();
     } else {
-        authModal.classList.remove("hidden");
+        authModal.style.display = "flex";
     }
 }
 
-authSwitch.onclick = () => {
+function toggleAuthMode() {
     isRegisterMode = !isRegisterMode;
     authError.textContent = "";
     if (isRegisterMode) {
@@ -345,35 +341,38 @@ authSwitch.onclick = () => {
         authSubmitBtn.textContent = "Giriş Yap";
         authSwitch.textContent = "Hesabın yok mu? Kayıt Ol";
     }
-};
+}
 
-authSubmitBtn.onclick = () => {
+function handleAuth() {
     const uname = document.getElementById("usernameInput").value.trim();
     const pass = document.getElementById("passwordInput").value.trim();
+    
     if (!uname || !pass) {
         authError.textContent = "Kullanıcı adı ve şifre boş bırakılamaz.";
         return;
     }
+
     if (isRegisterMode) {
         if (users[uname]) {
             authError.textContent = "Bu kullanıcı adı zaten alınmış.";
             return;
         }
         users[uname] = { password: pass, balance: 50, history: [] };
-        saveUsers();
-        currentUser = uname;
-        localStorage.setItem("wheelCurrentUser", currentUser);
-        checkAuth();
     } else {
         if (!users[uname] || users[uname].password !== pass) {
             authError.textContent = "Kullanıcı adı veya şifre hatalı.";
             return;
         }
-        currentUser = uname;
-        localStorage.setItem("wheelCurrentUser", currentUser);
-        checkAuth();
     }
-};
+
+    localStorage.setItem("wheelUsers", JSON.stringify(users));
+    currentUser = uname;
+    localStorage.setItem("wheelCurrentUser", currentUser);
+    
+    authModal.style.display = "none";
+    activeUserText.textContent = currentUser;
+    updateBalanceUI();
+}
 
 function logout() {
     currentUser = null;
@@ -381,11 +380,7 @@ function logout() {
     document.getElementById("usernameInput").value = "";
     document.getElementById("passwordInput").value = "";
     authError.textContent = "";
-    checkAuth();
-}
-
-function saveUsers() {
-    localStorage.setItem("wheelUsers", JSON.stringify(users));
+    authModal.style.display = "flex";
 }
 
 function updateBalanceUI() {
@@ -432,7 +427,7 @@ function submitDeposit() {
 
     users[currentUser].balance += amount;
     users[currentUser].history.unshift({text: "+" + amount + " TL Yatırıldı (" + name + " - " + fileInput.name + ")", date: new Date().toLocaleDateString()});
-    saveUsers();
+    localStorage.setItem("wheelUsers", JSON.stringify(users));
     updateBalanceUI();
     closeModals();
     
@@ -462,7 +457,7 @@ function submitWithdraw() {
 
     users[currentUser].balance -= amount;
     users[currentUser].history.unshift({text: "-" + amount + " TL Çekildi (" + name + " - " + iban.slice(0,8) + "...)", date: new Date().toLocaleDateString()});
-    saveUsers();
+    localStorage.setItem("wheelUsers", JSON.stringify(users));
     updateBalanceUI();
     closeModals();
 
@@ -485,116 +480,5 @@ function openHistory() {
     listDiv.innerHTML = "";
     const hist = users[currentUser].history || [];
     if(hist.length === 0) {
-        listDiv.innerHTML = "<div style='font-size:12px; color:#aaa; text-align:center;'>Henüz işlem geçmişi yok.</div>";
-    } else {
-        hist.forEach(h => {
-            listDiv.innerHTML += `<div class="history-item"><span>${h.text}</span><span style="color:#aaa; font-size:10px;">${h.date}</span></div>`;
-        });
-    }
-    document.getElementById("historyModal").classList.remove("hidden");
-}
-
-const prizes = [100, 50, 20, 10, 10, 5, 5, 1, 1, 1, 1, 1, 1, 5, 5, 10, 10, 20, 50, 100];
-const canvas = document.getElementById("wheel");
-const ctx = canvas.getContext("2d");
-const size = canvas.width, center = size / 2, radius = 280;
-const colors = ["#9333ea", "#0ea5e9", "#22c55e", "#f97316", "#ef4444"];
-let angle = 0, spinning = false;
-
-function draw() {
-    ctx.clearRect(0, 0, size, size);
-    const step = Math.PI * 2 / prizes.length;
-
-    prizes.forEach((p, i) => {
-        let start = angle + i * step;
-        let end = start + step;
-
-        ctx.beginPath();
-        ctx.moveTo(center, center);
-        ctx.arc(center, center, radius, start, end);
-        ctx.closePath();
-        ctx.fillStyle = colors[i % colors.length];
-        ctx.fill();
-        ctx.strokeStyle = "#fef08a";
-        ctx.lineWidth = 4;
-        ctx.stroke();
-
-        ctx.save();
-        ctx.translate(center, center);
-        ctx.rotate(start + step / 2);
-        ctx.fillStyle = "#ffffff";
-        ctx.font = "bold 24px Arial";
-        ctx.textAlign = "right";
-        ctx.shadowColor = "rgba(0,0,0,0.8)";
-        ctx.shadowBlur = 4;
-        ctx.fillText(p + " TL", radius - 25, 8);
-        ctx.restore();
-    });
-
-    ctx.beginPath();
-    ctx.arc(center, center, 50, 0, Math.PI * 2);
-    ctx.fillStyle = "#ca8a04";
-    ctx.fill();
-    ctx.strokeStyle = "#fef08a";
-    ctx.lineWidth = 8;
-    ctx.stroke();
-
-    ctx.fillStyle = "#fde047";
-    ctx.font = "bold 30px Arial";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText("★", center, center);
-}
-
-draw();
-checkAuth();
-
-function getWeightedPrizeIndex() {
-    const rnd = Math.random() * 1000;
-    let targetValue = 1;
-
-    if (rnd < 2) targetValue = 100;
-    else if (rnd < 8) targetValue = 50;
-    else if (rnd < 40) targetValue = 20;
-    else if (rnd < 150) targetValue = 10;
-    else if (rnd < 450) targetValue = 5;
-    else targetValue = 1;
-
-    let matchingIndices = [];
-    prizes.forEach((p, idx) => { if (p === targetValue) matchingIndices.push(idx); });
-    return matchingIndices[Math.floor(Math.random() * matchingIndices.length)];
-}
-
-document.getElementById("spin").onclick = () => {
-    if (spinning || !currentUser) return;
-
-    if (users[currentUser].balance < 10) {
-        alert("Yetersiz bakiye! Çarkı çevirmek için en az 10 TL gereklidir.");
-        return;
-    }
-
-    users[currentUser].balance -= 10;
-    if(!users[currentUser].history) users[currentUser].history = [];
-    users[currentUser].history.unshift({text: "Çeviri Ücreti: -10 TL", date: new Date().toLocaleDateString()});
-    saveUsers();
-    updateBalanceUI();
-
-    spinning = true;
-    document.getElementById("spin").disabled = true;
-    message.textContent = "Çark dönüyor...";
-
-    const chosen = getWeightedPrizeIndex();
-    const step = Math.PI * 2 / prizes.length;
-    const targetAngle = -Math.PI / 2 - (chosen * step) - (step / 2);
-    const extraTurns = 8 * Math.PI * 2;
-    const currentAngle = angle;
+        listDiv.innerHTML = "<div style='font-size:12px; color:#aaa; text-align:center;'>Henüz işlem geçmiş
     
-    const relativeTarget = (targetAngle % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
-    const currentMod = (currentAngle % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
-    let diff = relativeTarget - currentMod;
-    if (diff < 0) diff += Math.PI * 2;
-
-    const finish = currentAngle + extraTurns + diff;
-    const duration = 5000, begin = performance.now();
-
-    function animate(now) 
