@@ -49,6 +49,7 @@ body {
 .btn-history { background: linear-gradient(135deg, #a855f7, #6b21a8); }
 .btn-support { background: linear-gradient(135deg, #f97316, #c2410c); }
 .btn-admin { background: linear-gradient(135deg, #eab308, #ca8a04); display: none; }
+
 .user-bar {
     width: 100%; max-width: 440px; display: flex; justify-content: space-between;
     align-items: center; font-size: 12px; color: #d8b4fe; padding: 0 8px;
@@ -178,6 +179,7 @@ canvas { width: 100%; height: auto; filter: drop-shadow(0 0 20px rgba(234, 179, 
         <button onclick="closeModals()" class="modal-btn" style="background:#4b5563;">Paneli Kapat</button>
     </div>
 </div>
+
 <div class="header">
     <div class="balance-box">⭐ <span id="points">0</span> TL</div>
     <div class="top-buttons">
@@ -238,16 +240,16 @@ if(depositFileInput) {
         if(file) { document.getElementById("fileNameDisplay").textContent = "Seçilen Dosya: " + file.name; }
     };
 }
-<script>
+
 function checkAuth() {
     if (currentUser && users[currentUser]) {
-        authModal.classList.add("hidden");
+        if(authModal) authModal.style.display = "none";
         activeUserText.textContent = currentUser;
         updateBalanceUI();
         checkAdminAccess();
     } else {
-        authModal.classList.remove("hidden");
-        adminBtn.style.display = "none";
+        if(authModal) authModal.style.display = "flex";
+        if(adminBtn) adminBtn.style.display = "none";
     }
 }
 
@@ -461,6 +463,8 @@ function openAdminPanel() {
 }
 
 function adminAction(index, action) {
+    let req = adminRequests[index];
+    let targetUser = users[rfunction adminAction(index, action) {
     let req = adminRequests[index];
     let targetUser = users[req.user];
 
