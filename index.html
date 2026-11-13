@@ -6,106 +6,16 @@
 <title>Şans Çarkı</title>
 <style>
 * { box-sizing: border-box; }
-body {
-    margin: 0;
-    background: radial-gradient(circle, #2a0845 0%, #100d25 100%);
-    color: white;
-    font-family: Arial, sans-serif;
-    text-align: center;
-    padding: 10px;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-}
-.header {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    max-width: 440px;
-    padding: 8px 4px;
-    align-items: center;
-    gap: 3px;
-}
-.balance-box {
-    background: linear-gradient(135deg, #181035, #2d1b5c);
-    border: 2px solid #a855f7;
-    padding: 6px 8px;
-    border-radius: 20px;
-    font-weight: bold;
-    font-size: 12px;
-    box-shadow: 0 0 15px rgba(168, 85, 247, 0.5);
-    white-space: nowrap;
-}
-.balance-box span { color: #facc15; font-size: 14px; }
-.top-buttons { display: flex; gap: 3px; }
-.btn-top {
-    color: white; border: none; padding: 6px 7px; border-radius: 10px;
-    font-weight: bold; font-size: 10px; cursor: pointer; white-space: nowrap;
-}
-.btn-deposit { background: linear-gradient(135deg, #22c55e, #15803d); }
-.btn-withdraw { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
-.btn-history { background: linear-gradient(135deg, #a855f7, #6b21a8); }
-.btn-support { background: linear-gradient(135deg, #f97316, #c2410c); }
-.btn-admin { background: linear-gradient(135deg, #eab308, #ca8a04); display: none; }
-
-.user-bar {
-    width: 100%; max-width: 440px; display: flex; justify-content: space-between;
-    align-items: center; font-size: 12px; color: #d8b4fe; padding: 0 8px;
-}
-.logout-btn {
-    background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444;
-    color: #fca5a5; border-radius: 10px; padding: 3px 8px; font-size: 11px; cursor: pointer;
-}
-.wheel-container { position: relative; width: min(82vw, 320px); margin: 5px auto; }
-canvas { width: 100%; height: auto; filter: drop-shadow(0 0 20px rgba(234, 179, 8, 0.4)); }
-.pointer {
-    position: absolute; top: -8px; left: 50%; transform: translateX(-50%);
-    width: 0; height: 0; border-left: 14px solid transparent;
-    border-right: 14px solid transparent; border-top: 28px solid #ef4444; z-index: 10;
-}
-.spin-btn {
-    width: 100%; max-width: 360px; background: linear-gradient(to bottom, #fde047, #ca8a04);
-    color: #422006; border: 3px solid #fef08a; border-radius: 25px; padding: 14px;
-    font-size: 20px; font-weight: 900; cursor: pointer; box-shadow: 0 6px 0 #854d0e;
-    text-transform: uppercase; margin: 10px 0;
-}
-.spin-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #854d0e; }
-.spin-btn:disabled { opacity: 0.6; transform: none; }
-#message { min-height: 24px; font-size: 15px; font-weight: bold; color: #facc15; }
-
-.modal {
-    position: fixed; inset: 0; background: rgba(10, 6, 25, 0.98);
-    display: flex; justify-content: center; align-items: center; z-index: 9999; padding: 20px;
-}
-.modal-box {
-    background: linear-gradient(145deg, #1e1344, #120b29); border: 2px solid #a855f7;
-    border-radius: 20px; padding: 20px; width: 100%; max-width: 340px; text-align: center;
-}
-.modal-box h2 { margin-top: 0; color: #fde047; font-size: 18px; }
-.modal-box input, .modal-box textarea {
-    width: 100%; padding: 10px; margin: 6px 0; border-radius: 10px;
-    border: 1px solid #6b21a8; background: #0f0924; color: white; font-size: 13px;
-}
-.file-label {
-    display: block; background: rgba(168, 85, 247, 0.2); border: 1px dashed #a855f7;
-    padding: 8px; border-radius: 10px; font-size: 12px; color: #e9d5ff; margin: 6px 0; cursor: pointer;
-}
-.modal-btn {
-    width: 100%; padding: 11px; margin-top: 8px; border: none; border-radius: 10px;
-    font-weight: bold; font-size: 14px; cursor: pointer; background: linear-gradient(135deg, #22c55e, #15803d); color: white;
-}
-.switch-text { margin-top: 10px; font-size: 12px; color: #c084fc; cursor: pointer; text-decoration: underline; }
+body { margin: 0; background: #100d25; color: white; font-family: Arial; text-align: center; padding: 10px; min-height: 100vh; display: flex; flex-direction: column; justify-content: space-between; align-items: center; }
+.header { display: flex; justify-content: space-between; width: 100%; max-width: 440px; padding: 8px; }
+.balance-box { background: #2d1b5c; border: 2px solid #a855f7; padding: 6px 12px; border-radius: 20px; font-weight: bold; }
+.btn-top { color: white; border: none; padding: 6px 10px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 10px; }
+.modal { position: fixed; inset: 0; background: rgba(10, 6, 25, 0.95); display: flex; justify-content: center; align-items: center; z-index: 9999; padding: 20px; }
+.modal-box { background: #1e1344; border: 2px solid #a855f7; border-radius: 20px; padding: 20px; width: 100%; max-width: 340px; text-align: center; }
+.modal-box input, .modal-box textarea { width: 100%; padding: 10px; margin: 6px 0; border-radius: 10px; border: 1px solid #6b21a8; background: #0f0924; color: white; }
+.modal-btn { width: 100%; padding: 11px; margin-top: 8px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; background: #22c55e; color: white; }
 .hidden { display: none !important; }
-.history-item {
-    background: rgba(255,255,255,0.05); padding: 8px; margin: 4px 0;
-    border-radius: 8px; font-size: 11px; text-align: left; display: flex; justify-content: space-between; align-items: center;
-}
-.admin-card {
-    background: rgba(168, 85, 247, 0.1); border: 1px solid #a855f7; padding: 10px;
-    margin: 8px 0; border-radius: 10px; font-size: 11px; text-align: left;
-}
+.spin-btn { width: 100%; max-width: 360px; background: #ca8a04; color: white; border: 3px solid #fef08a; border-radius: 25px; padding: 14px; font-size: 18px; font-weight: bold; cursor: pointer; margin: 10px 0; }
 </style>
 </head>
 <body>
@@ -116,500 +26,85 @@ canvas { width: 100%; height: auto; filter: drop-shadow(0 0 20px rgba(234, 179, 
         <input type="text" id="usernameInput" placeholder="Kullanıcı Adı" autocomplete="off">
         <input type="password" id="passwordInput" placeholder="Şifre">
         <div id="authError" style="color:#f87171; font-size:11px; margin-top:3px;"></div>
-        <button id="authSubmitBtn" class="modal-btn" onclick="handleAuth()">Kayıt Ol ve Başla</button>
-        <div id="authSwitch" class="switch-text" onclick="toggleAuthMode()">Zaten hesabın var mı? Giriş Yap</div>
+        <button type="button" class="modal-btn" onclick="handleAuth()">Devam Et</button>
+        <div id="authSwitch" style="margin-top:10px; font-size:12px; color:#c084fc; cursor:pointer;" onclick="toggleAuthMode()">Zaten hesabın var mı? Giriş Yap</div>
     </div>
 </div>
 
 <div id="depositModal" class="modal hidden">
     <div class="modal-box">
         <h2>Para Yükle</h2>
-        <p style="font-size:11px; color:#e9d5ff; margin-bottom:6px;">Lütfen aşağıdaki hesaba yatırım yapıp bildirimi gönderin.</p>
-        <div style="background:#0f0924; padding:8px; border-radius:10px; border:1px dashed #a855f7; font-size:11px; margin-bottom:6px; color:#facc15; text-align:left;">
-            <b>Alıcı:</b> Ramazan Yıldırım<br>
-            <b>IBAN:</b> TR31 0006 7010 0000 0025 0393 14
-        </div>
         <input type="number" id="depositAmount" placeholder="Yatırılan Tutar (TL)">
-        <input type="text" id="depositName" placeholder="Gönderen Ad Soyad" autocomplete="off">
-        <label class="file-label">
-            📄 Dekont Dosyası Seç (PDF/Görsel)
-            <input type="file" id="depositFile" style="display:none;" accept=".pdf,image/*">
-        </label>
-        <div id="fileNameDisplay" style="font-size:10px; color:#4ade80; margin-bottom:4px;"></div>
-        <button onclick="submitDeposit()" class="modal-btn">Onaya Gönder</button>
-        <button onclick="closeModals()" class="modal-btn" style="background:#4b5563; margin-top:4px;">İptal</button>
+        <input type="text" id="depositName" placeholder="Gönderen Ad Soyad">
+        <button type="button" onclick="submitDeposit()" class="modal-btn">Gönder</button>
+        <button type="button" onclick="closeModals()" class="modal-btn" style="background:#4b5563;">İptal</button>
     </div>
 </div>
 
 <div id="withdrawModal" class="modal hidden">
     <div class="modal-box">
         <h2>Para Çek</h2>
-        <p style="font-size:11px; color:#e9d5ff; margin-bottom:6px;" id="withdrawInfo">Çekilebilecek Bakiye: 0 TL</p>
-        <input type="number" id="withdrawAmount" placeholder="Çekilecek Tutar (TL)">
-        <input type="text" id="withdrawName" placeholder="Ad Soyad (Hesap Sahibi)" autocomplete="off">
-        <input type="text" id="withdrawIban" placeholder="TR ile başlayan 26 haneli IBAN" autocomplete="off">
-        <button onclick="submitWithdraw()" class="modal-btn" style="background:#3b82f6;">Çekim Talebi Ver</button>
-        <button onclick="closeModals()" class="modal-btn" style="background:#4b5563; margin-top:4px;">İptal</button>
+        <p id="withdrawInfo" style="font-size:11px;">Bakiye: 0 TL</p>
+        <input type="number" id="withdrawAmount" placeholder="Tutar">
+        <input type="text" id="withdrawName" placeholder="Ad Soyad">
+        <input type="text" id="withdrawIban" placeholder="TR IBAN (26 hane)">
+        <button type="button" onclick="submitWithdraw()" class="modal-btn" style="background:#3b82f6;">Talep Ver</button>
+        <button type="button" onclick="closeModals()" class="modal-btn" style="background:#4b5563;">İptal</button>
     </div>
 </div>
 
 <div id="historyModal" class="modal hidden">
     <div class="modal-box">
-        <h2>İşlem Geçmişi</h2>
-        <div id="historyList" style="max-height:180px; overflow-y:auto; margin:8px 0;"></div>
-        <button onclick="closeModals()" class="modal-btn" style="background:#4b5563;">Kapat</button>
+        <h2>Geçmiş</h2>
+        <div id="historyList" style="max-height:150px; overflow-y:auto; text-align:left;"></div>
+        <button type="button" onclick="closeModals()" class="modal-btn" style="background:#4b5563;">Kapat</button>
     </div>
 </div>
 
 <div id="supportModal" class="modal hidden">
     <div class="modal-box">
-        <h2>Destek Hattı</h2>
-        <p style="font-size:11px; color:#e9d5ff; margin-bottom:8px;">Sorun veya talebinizi yazın, yöneticimize iletilecektir.</p>
-        <textarea id="supportMessage" placeholder="Mesajınızı buraya yazın..." rows="3"></textarea>
-        <button onclick="submitSupport()" class="modal-btn" style="background:#f97316;">Destek Talebi Gönder</button>
-        <button onclick="closeModals()" class="modal-btn" style="background:#4b5563; margin-top:4px;">Kapat</button>
+        <h2>Destek</h2>
+        <textarea id="supportMessage" placeholder="Mesajınız..." rows="3"></textarea>
+        <button type="button" onclick="submitSupport()" class="modal-btn" style="background:#f97316;">Gönder</button>
+        <button type="button" onclick="closeModals()" class="modal-btn" style="background:#4b5563;">Kapat</button>
     </div>
 </div>
 
 <div id="adminModal" class="modal hidden">
-    <div class="modal-box" style="max-width:380px;">
-        <h2 style="color:#eab308;">👑 Yönetici Paneli</h2>
-        <div style="font-size:11px; color:#d8b4fe; margin-bottom:10px;">Bekleyen Yatırım, Çekim ve Destek Talepleri</div>
-        <div id="adminRequestsList" style="max-height:240px; overflow-y:auto; margin:8px 0;"></div>
-        <button onclick="closeModals()" class="modal-btn" style="background:#4b5563;">Paneli Kapat</button>
+    <div class="modal-box">
+        <h2 style="color:#eab308;">👑 Yönetim</h2>
+        <div id="adminRequestsList" style="max-height:200px; overflow-y:auto;"></div>
+        <button type="button" onclick="closeModals()" class="modal-btn" style="background:#4b5563;">Kapat</button>
     </div>
 </div>
 
 <div class="header">
     <div class="balance-box">⭐ <span id="points">0</span> TL</div>
-    <div class="top-buttons">
-        <button class="btn-top btn-deposit" onclick="openModal('depositModal')">Yükle</button>
-        <button class="btn-top btn-withdraw" onclick="openModal('withdrawModal')">Çek</button>
-        <button class="btn-top btn-history" onclick="openHistory()">Geçmiş</button>
-        <button class="btn-top btn-support" onclick="openModal('supportModal')">Destek</button>
-        <button id="adminBtn" class="btn-top btn-admin" onclick="openAdminPanel()">Yönetim</button>
+    <div>
+        <button type="button" class="btn-top" style="background:#22c55e;" onclick="openModal('depositModal')">Yükle</button>
+        <button type="button" class="btn-top" style="background:#3b82f6;" onclick="openModal('withdrawModal')">Çek</button>
+        <button type="button" class="btn-top" style="background:#a855f7;" onclick="openHistory()">Geçmiş</button>
+        <button type="button" class="btn-top" style="background:#f97316;" onclick="openModal('supportModal')">Destek</button>
+        <button type="button" id="adminBtn" class="btn-top" style="background:#eab308; display:none;" onclick="openAdminPanel()">Yönetim</button>
     </div>
 </div>
 
-<div class="user-bar">
-    <span>👤 Hesap: <b id="activeUser">-</b></span>
-    <button class="logout-btn" onclick="logout()">Çıkış Yap</button>
+<div>
+    <span>Hesap: <b id="activeUser">-</b></span>
+    <button type="button" style="background:none; border:none; color:#f87171; cursor:pointer;" onclick="logout()">Çıkış</button>
 </div>
 
 <div>
-    <h1 style="margin:2px 0; color:#fef08a; font-size:22px;">ŞANS ÇARKI</h1>
-    <div style="font-size:12px; color:#facc15; margin-bottom:4px;">Çeviri Ücreti: 10 TL</div>
+    <h1>ŞANS ÇARKI</h1>
 </div>
 
-<div class="wheel-container">
-    <div class="pointer"></div>
-    <canvas id="wheel" width="600" height="600"></canvas>
+<div>
+    <canvas id="wheel" width="300" height="300" style="width:250px; height:250px;"></canvas>
 </div>
 
-<div id="message">Şansını dene, büyük ödüller kazan!</div>
-<button id="spin" class="spin-btn">ÇARKI ÇEVİR (10 TL)</button>
+<div id="message">Şansını dene!</div>
+<button type="button" id="spin" class="spin-btn">ÇEVİR (10 TL)</button>
 
-<script>
-let users = JSON.parse(localStorage.getItem("wheelUsers") || "{}");
-let adminRequests = JSON.parse(localStorage.getItem("wheelAdminReq") || "[]");
-let currentUser = localStorage.getItem("wheelCurrentUser") || null;
-let isRegisterMode = true;
-
-const authModal = document.getElementById("authModal");
-const authTitle = document.getElementById("authTitle");
-const authSubmitBtn = document.getElementById("authSubmitBtn");
-const authSwitch = document.getElementById("authSwitch");
-const authError = document.getElementById("authError");
-const pointText = document.getElementById("points");
-const activeUserText = document.getElementById("activeUser");
-const message = document.getElementById("message");
-const adminBtn = document.getElementById("adminBtn");
-
-function checkAdminAccess() {
-    if (currentUser === "BGSGDL") {
-        adminBtn.style.display = "inline-block";
-    } else {
-        adminBtn.style.display = "none";
-    }
-}
-
-const depositFileInput = document.getElementById("depositFile");
-if(depositFileInput) {
-    depositFileInput.onchange = (e) => {
-        const file = e.target.files[0];
-        if(file) { document.getElementById("fileNameDisplay").textContent = "Seçilen Dosya: " + file.name; }
-    };
-}
-
-function checkAuth() {
-    if (currentUser && users[currentUser]) {
-        if(authModal) authModal.style.display = "none";
-        activeUserText.textContent = currentUser;
-        updateBalanceUI();
-        checkAdminAccess();
-    } else {
-        if(authModal) authModal.style.display = "flex";
-        if(adminBtn) adminBtn.style.display = "none";
-    }
-}
-
-function toggleAuthMode() {
-    isRegisterMode = !isRegisterMode;
-    authError.textContent = "";
-    if (isRegisterMode) {
-        authTitle.textContent = "Kayıt Ol";
-        authSubmitBtn.textContent = "Kayıt Ol ve Başla";
-        authSwitch.textContent = "Zaten hesabın var mı? Giriş Yap";
-    } else {
-        authTitle.textContent = "Giriş Yap";
-        authSubmitBtn.textContent = "Giriş Yap";
-        authSwitch.textContent = "Hesabın yok mu? Kayıt Ol";
-    }
-}
-
-function handleAuth() {
-    const uname = document.getElementById("usernameInput").value.trim();
-    const pass = document.getElementById("passwordInput").value.trim();
-    if (!uname || !pass) { authError.textContent = "Kullanıcı adı ve şifre boş bırakılamaz."; return; }
-
-    if (isRegisterMode) {
-        if (users[uname]) { authError.textContent = "Bu kullanıcı adı zaten alınmış."; return; }
-        users[uname] = { password: pass, balance: 0, history: [] };
-    } else {
-        if (!users[uname] || users[uname].password !== pass) { authError.textContent = "Kullanıcı adı veya şifre hatalı."; return; }
-    }
-
-    localStorage.setItem("wheelUsers", JSON.stringify(users));
-    currentUser = uname;
-    localStorage.setItem("wheelCurrentUser", currentUser);
-    checkAuth();
-}
-
-function logout() {
-    currentUser = null;
-    localStorage.removeItem("wheelCurrentUser");
-    document.getElementById("usernameInput").value = "";
-    document.getElementById("passwordInput").value = "";
-    authError.textContent = "";
-    checkAuth();
-}
-
-function updateBalanceUI() {
-    if (currentUser && users[currentUser]) {
-        pointText.textContent = users[currentUser].balance;
-        if(!users[currentUser].history) users[currentUser].history = [];
-    }
-}
-
-function openModal(id) {
-    if(id === 'withdrawModal') {
-        document.getElementById("withdrawInfo").textContent = "Çekilebilecek Bakiye: " + users[currentUser].balance + " TL";
-        document.getElementById("withdrawAmount").value = "";
-        document.getElementById("withdrawName").value = "";
-        document.getElementById("withdrawIban").value = "";
-    }
-    if(id === 'depositModal') {
-        document.getElementById("depositAmount").value = "";
-        document.getElementById("depositName").value = "";
-        const fileElem = document.getElementById("depositFile");
-        if(fileElem) fileElem.value = "";
-        const fileDisp = document.getElementById("fileNameDisplay");
-        if(fileDisp) fileDisp.textContent = "";
-    }
-    if(id === 'supportModal') { document.getElementById("supportMessage").value = ""; }
-    document.getElementById(id).classList.remove("hidden");
-}
-
-function closeModals() {
-    document.querySelectorAll('.modal').forEach(m => {
-        if(m.id !== 'authModal') m.classList.add("hidden");
-    });
-}
-
-function submitDeposit() {
-    const amount = Number(document.getElementById("depositAmount").value);
-    const name = document.getElementById("depositName").value.trim();
-    const fileInput = document.getElementById("depositFile").files[0];
-
-    if(!amount || amount <= 0 || !name || !fileInput) { alert("Lütfen tüm alanları doldurun ve dekont seçin."); return; }
-
-    const reqId = Date.now();
-    adminRequests.push({
-        id: reqId,
-        type: 'deposit',
-        user: currentUser,
-        amount: amount,
-        name: name,
-        file: fileInput.name,
-        date: new Date().toLocaleDateString(),
-        status: 'Bekliyor'
-    });
-    localStorage.setItem("wheelAdminReq", JSON.stringify(adminRequests));
-
-    users[currentUser].history.unshift({
-        id: reqId,
-        text: "+" + amount + " TL Yatırma Talebi", 
-        status: "Bekliyor", 
-        date: new Date().toLocaleDateString()
-    });
-    localStorage.setItem("wheelUsers", JSON.stringify(users));
-
-    updateBalanceUI();
-    closeModals();
-    message.textContent = "Para yatırma talebiniz yönetici onayına gönderildi (Bekliyor).";
-}
-
-function submitWithdraw() {
-    const amount = Number(document.getElementById("withdrawAmount").value);
-    const name = document.getElementById("withdrawName").value.trim();
-    const iban = document.getElementById("withdrawIban").value.trim().toUpperCase();
-
-    if(!amount || amount <= 0 || !name || !iban) { alert("Lütfen tüm alanları doldurun."); return; }
-    if(!iban.startsWith("TR") || iban.length !== 26) { alert("Geçersiz IBAN! TR ile başlayan 26 hane olmalı."); return; }
-    if(amount > users[currentUser].balance) { alert("Yetersiz bakiye!"); return; }
-
-    users[currentUser].balance -= amount;
-    localStorage.setItem("wheelUsers", JSON.stringify(users));
-
-    const reqId = Date.now();
-    adminRequests.push({
-        id: reqId,
-        type: 'withdraw',
-        user: currentUser,
-        amount: amount,
-        name: name,
-        iban: iban,
-        date: new Date().toLocaleDateString(),
-        status: 'Bekliyor'
-    });
-    localStorage.setItem("wheelAdminReq", JSON.stringify(adminRequests));
-
-    users[currentUser].history.unshift({
-        id: reqId,
-        text: "-" + amount + " TL Çekim Talebi", 
-        status: "Bekliyor", 
-        date: new Date().toLocaleDateString()
-    });
-    localStorage.setItem("wheelUsers", JSON.stringify(users));
-
-    updateBalanceUI();
-    closeModals();
-    message.textContent = "Çekim talebiniz alındı, yönetici onayını bekliyor.";
-}
-
-function submitSupport() {
-    const text = document.getElementById("supportMessage").value.trim();
-    if(!text) { alert("Mesaj yazın."); return; }
-
-    adminRequests.push({
-        id: Date.now(),
-        type: 'support',
-        user: currentUser,
-        text: text,
-        date: new Date().toLocaleDateString(),
-        status: 'Bekliyor'
-    });
-    localStorage.setItem("wheelAdminReq", JSON.stringify(adminRequests));
-
-    closeModals();
-    message.textContent = "Destek talebiniz yöneticiye iletildi.";
-}
-
-function openAdminPanel() {
-    let pass = prompt("Yönetici Şifresini Girin:");
-    if (pass !== "BGSGDL_Admin_2026!#") {
-        alert("Hatalı Şifre!");
-        return;
-    }
-
-    const listDiv = document.getElementById("adminRequestsList");
-    listDiv.innerHTML = "";
-    
-    if(adminRequests.length === 0) {
-        listDiv.innerHTML = "<div style='font-size:12px; color:#aaa; text-align:center;'>Bekleyen talep yok.</div>";
-    } else {
-        adminRequests.forEach((req, index) => {
-            if(req.status === 'Bekliyor') {
-                if(req.type === 'deposit') {
-                    listDiv.innerHTML += `
-                        <div class="admin-card">
-                            <b>[Yatırım]</b> ${req.user} - <b>${req.amount} TL</b><br>
-                            Gönderen: ${req.name}<br>
-                            Dekont: ${req.file}<br>
-                            <button onclick="adminAction(${index}, 'approve')" style="background:#22c55e; color:white; border:none; padding:4px 8px; border-radius:5px; margin-top:4px; cursor:pointer;">Onayla</button>
-                            <button onclick="adminAction(${index}, 'reject')" style="background:#ef4444; color:white; border:none; padding:4px 8px; border-radius:5px; margin-top:4px; cursor:pointer;">Reddet</button>
-                        </div>`;
-                } else if(req.type === 'withdraw') {
-                    listDiv.innerHTML += `
-                        <div class="admin-card">
-                            <b>[Çekim]</b> ${req.user} - <b>${req.amount} TL</b><br>
-                            İsim: ${req.name}<br>
-                            IBAN: ${req.iban}<br>
-                            <button onclick="adminAction(${index}, 'approve')" style="background:#22c55e; color:white; border:none; padding:4px 8px; border-radius:5px; margin-top:4px; cursor:pointer;">Onayla</button>
-                            <button onclick="adminAction(${index}, 'reject')" style="background:#ef4444; color:white; border:none; padding:4px 8px; border-radius:5px; margin-top:4px; cursor:pointer;">Reddet (İade Et)</button>
-                        </div>`;
-                } else if(req.type === 'support') {
-                    listDiv.innerHTML += `
-                        <div class="admin-card" style="border-color:#f97316;">
-                            <b>[Destek]</b> ${req.user}:<br>
-                            "${req.text}"<br>
-                            <button onclick="adminAction(${index}, 'resolve')" style="background:#3b82f6; color:white; border:none; padding:4px 8px; border-radius:5px; margin-top:4px; cursor:pointer;">Okundu / Kapat</button>
-                        </div>`;
-                }
-            }
-        });
-    }
-    document.getElementById("adminModal").classList.remove("hidden");
-}
-
-function adminAction(index, action) {
-    let req = adminRequests[index];
-    let targetUser = users[rfunction adminAction(index, action) {
-    let req = adminRequests[index];
-    let targetUser = users[req.user];
-
-    if(req.type === 'deposit') {
-        if(action === 'approve') {
-            if(targetUser) {
-                targetUser.balance += req.amount;
-                targetUser.history = targetUser.history.map(h => h.id === req.id ? {...h, text: "+" + req.amount + " TL Yüklendi", status: "Onaylandı"} : h);
-            }
-            alert(req.user + " adlı kullanıcının " + req.amount + " TL yatırımı onaylandı.");
-        } else {
-            if(targetUser) {
-                targetUser.history = targetUser.history.map(h => h.id === req.id ? {...h, text: "+" + req.amount + " TL Yatırım", status: "Reddedildi"} : h);
-            }
-            alert("Yatırım reddedildi.");
-        }
-    } else if(req.type === 'withdraw') {
-        if(action === 'approve') {
-            if(targetUser) {
-                targetUser.history = targetUser.history.map(h => h.id === req.id ? {...h, text: "-" + req.amount + " TL Çekildi", status: "Onaylandı"} : h);
-            }
-            alert(req.user + " adlı kullanıcının çekim talebi onaylandı.");
-        } else {
-            if(targetUser) {
-                targetUser.balance += req.amount;
-                targetUser.history = targetUser.history.map(h => h.id === req.id ? {...h, text: "-" + req.amount + " TL Çekim", status: "Reddedildi (İade Edildi)"} : h);
-            }
-            alert("Çekim reddedildi, bakiye kullanıcıya iade edildi.");
-        }
-    } else if(req.type === 'support') {
-        alert("Destek talebi kapatıldı.");
-    }
-
-    adminRequests.splice(index, 1);
-    localStorage.setItem("wheelAdminReq", JSON.stringify(adminRequests));
-    localStorage.setItem("wheelUsers", JSON.stringify(users));
-    openAdminPanel();
-    updateBalanceUI();
-}
-
-function openHistory() {
-    const listDiv = document.getElementById("historyList");
-    listDiv.innerHTML = "";
-    const hist = users[currentUser].history || [];
-    if(hist.length === 0) {
-        listDiv.innerHTML = "<div style='font-size:12px; color:#aaa; text-align:center;'>Geçmiş yok.</div>";
-    } else {
-        hist.forEach(h => {
-            let color = h.status === 'Onaylandı' ? '#4ade80' : (h.status === 'Reddedildi' || h.status.includes('Reddedildi') ? '#f87171' : '#facc15');
-            listDiv.innerHTML += `<div class="history-item"><span>${h.text}</span><span style="color:${color}; font-weight:bold;">${h.status || ''}</span><span style="color:#aaa; font-size:10px;">${h.date}</span></div>`;
-        });
-    }
-    document.getElementById("historyModal").classList.remove("hidden");
-}
-
-const prizes = [100, 50, 20, 10, 10, 5, 5, 1, 1, 1, 1, 1, 1, 5, 5, 10, 10, 20, 50, 100];
-const canvas = document.getElementById("wheel");
-const ctx = canvas.getContext("2d");
-const size = canvas.width, center = size / 2, radius = 280;
-const colors = ["#9333ea", "#0ea5e9", "#22c55e", "#f97316", "#ef4444"];
-let angle = 0, spinning = false;
-
-function draw() {
-    ctx.clearRect(0, 0, size, size);
-    const step = Math.PI * 2 / prizes.length;
-    prizes.forEach((p, i) => {
-        let start = angle + i * step;
-        let end = start + step;
-        ctx.beginPath(); ctx.moveTo(center, center); ctx.arc(center, center, radius, start, end);
-        ctx.closePath(); ctx.fillStyle = colors[i % colors.length]; ctx.fill();
-        ctx.strokeStyle = "#fef08a"; ctx.lineWidth = 4; ctx.stroke();
-        ctx.save(); ctx.translate(center, center); ctx.rotate(start + step / 2);
-        ctx.fillStyle = "#ffffff"; ctx.font = "bold 24px Arial"; ctx.textAlign = "right";
-        ctx.fillText(p + " TL", radius - 25, 8); ctx.restore();
-    });
-    ctx.beginPath(); ctx.arc(center, center, 50, 0, Math.PI * 2);
-    ctx.fillStyle = "#ca8a04"; ctx.fill(); ctx.strokeStyle = "#fef08a"; ctx.lineWidth = 8; ctx.stroke();
-    ctx.fillStyle = "#fde047"; ctx.font = "bold 30px Arial"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    ctx.fillText("★", center, center);
-}
-
-draw();
-checkAuth();
-
-const spinBtn = document.getElementById("spin");
-if(spinBtn) {
-    spinBtn.onclick = () => {
-        if (spinning || !currentUser) return;
-        if (users[currentUser].balance < 10) { alert("Yetersiz bakiye! En az 10 TL gerekli."); return; }
-
-        users[currentUser].balance -= 10;
-        if(!users[currentUser].history) users[currentUser].history = [];
-        users[currentUser].history.unshift({text: "Çeviri Ücreti: -10 TL", status: "Tamamlandı", date: new Date().toLocaleDateString()});
-        localStorage.setItem("wheelUsers", JSON.stringify(users));
-        updateBalanceUI();
-
-        spinning = true;
-        spinBtn.disabled = true;
-        message.textContent = "Çark dönüyor...";
-
-        const rnd = Math.random() * 1000;
-        let targetValue = 1;
-        if (rnd < 2) targetValue = 100;
-        else if (rnd < 8) targetValue = 50;
-        else if (rnd < 40) targetValue = 20;
-        else if (rnd < 150) targetValue = 10;
-        else if (rnd < 450) targetValue = 5;
-        else targetValue = 1;
-
-        let matching = [];
-        prizes.forEach((p, idx) => { if (p === targetValue) matching.push(idx); });
-        const chosen = matching[Math.floor(Math.random() * matching.length)];
-
-        const step = Math.PI * 2 / prizes.length;
-        const targetAngle = -Math.PI / 2 - (chosen * step) - (step / 2);
-        const extraTurns = 8 * Math.PI * 2;
-        const currentAngle = angle;
-        const relativeTarget = (targetAngle % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
-        const currentMod = (currentAngle % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
-        let diff = relativeTarget - currentMod;
-        if (diff < 0) diff += Math.PI * 2;
-
-        const finish = currentAngle + extraTurns + diff;
-        const duration = 5000, begin = performance.now();
-
-        function animate(now) {
-            let t = Math.min(1, (now - begin) / duration);
-            let ease = 1 - Math.pow(1 - t, 4);
-            angle = currentAngle + (finish - currentAngle) * ease;
-            draw();
-            if (t < 1) {
-                requestAnimationFrame(animate);
-            } else {
-                angle = finish; draw();
-                users[currentUser].balance += prizes[chosen];
-                users[currentUser].history.unshift({text: "Çarktan Kazanıldı: +" + prizes[chosen] + " TL", status: "Tamamlandı", date: new Date().toLocaleDateString()});
-                localStorage.setItem("wheelUsers", JSON.stringify(users));
-                updateBalanceUI();
-                message.textContent = "Tebrikler! " + prizes[chosen] + " TL kazandın!";
-                spinning = false; spinBtn.disabled = false;
-            }
-        }
-        requestAnimationFrame(animate);
-    };
-}
-</script>
+<script src="script.js"></script>
 </body>
 </html>
