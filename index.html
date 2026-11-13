@@ -23,235 +23,46 @@ body {
     display: flex;
     justify-content: space-between;
     width: 100%;
-    max-width: 400px;
-    padding: 10px;
+    max-width: 420px;
+    padding: 8px 4px;
     align-items: center;
+    gap: 6px;
 }
 .balance-box {
     background: linear-gradient(135deg, #181035, #2d1b5c);
     border: 2px solid #a855f7;
-    padding: 8px 15px;
+    padding: 7px 12px;
     border-radius: 20px;
     font-weight: bold;
-    font-size: 16px;
+    font-size: 14px;
     box-shadow: 0 0 15px rgba(168, 85, 247, 0.5);
+    white-space: nowrap;
 }
-.balance-box span { color: #facc15; font-size: 18px; }
+.balance-box span { color: #facc15; font-size: 16px; }
+.top-buttons {
+    display: flex;
+    gap: 6px;
+}
 .btn-top {
-    background: linear-gradient(135deg, #22c55e, #15803d);
     color: white;
     border: none;
-    padding: 8px 14px;
+    padding: 8px 11px;
     border-radius: 15px;
     font-weight: bold;
-    font-size: 13px;
+    font-size: 12px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+.btn-deposit {
+    background: linear-gradient(135deg, #22c55e, #15803d);
     box-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
 }
-.wheel-container {
-    position: relative;
-    width: min(85vw, 340px);
-    margin: 10px auto;
+.btn-withdraw {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
 }
-canvas {
+.user-bar {
     width: 100%;
-    height: auto;
-    filter: drop-shadow(0 0 20px rgba(234, 179, 8, 0.4));
-}
-.pointer {
-    position: absolute;
-    top: -8px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0; 
-    height: 0; 
-    border-left: 14px solid transparent;
-    border-right: 14px solid transparent;
-    border-top: 28px solid #ef4444;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
-    z-index: 10;
-}
-.spin-btn {
-    width: 100%;
-    max-width: 360px;
-    background: linear-gradient(to bottom, #fde047, #ca8a04);
-    color: #422006;
-    border: 3px solid #fef08a;
-    border-radius: 25px;
-    padding: 15px;
-    font-size: 22px;
-    font-weight: 900;
-    cursor: pointer;
-    box-shadow: 0 6px 0 #854d0e, 0 0 25px rgba(250, 204, 21, 0.7);
-    text-transform: uppercase;
-    margin: 15px 0;
-    letter-spacing: 1px;
-}
-.spin-btn:active {
-    transform: translateY(4px);
-    box-shadow: 0 2px 0 #854d0e, 0 0 15px rgba(250, 204, 21, 0.7);
-}
-.spin-btn:disabled {
-    opacity: 0.6;
-    transform: none;
-}
-#message {
-    min-height: 25px;
-    font-size: 16px;
-    font-weight: bold;
-    color: #facc15;
-    margin-bottom: 10px;
-}
-</style>
-</head>
-<body>
-
-<div class="header">
-    <div class="balance-box">⭐ Bakiye: <span id="points">0</span> TL</div>
-    <button class="btn-top">Para Yükle</button>
-</div>
-
-<div>
-    <h1 style="margin:5px 0; color:#fef08a; font-size:24px; text-shadow: 0 0 10px rgba(254,240,138,0.5);">ŞANS ÇARKI</h1>
-</div>
-
-<div class="wheel-container">
-    <div class="pointer"></div>
-    <canvas id="wheel" width="600" height="600"></canvas>
-</div>
-
-<div id="message">Şansını dene, büyük ödüller kazan!</div>
-
-<button id="spin" class="spin-btn">ÇARKI ÇEVİR</button>
-
-<script>
-const prizes = [100, 50, 20, 10, 10, 5, 5, 1, 1, 1, 1, 1, 1, 5, 5, 10, 10, 20, 50, 100];
-const canvas = document.getElementById("wheel");
-const ctx = canvas.getContext("2d");
-const size = canvas.width, center = size / 2, radius = 280;
-const colors = ["#9333ea", "#0ea5e9", "#22c55e", "#f97316", "#ef4444"];
-
-let angle = 0, spinning = false;
-let points = Number(localStorage.getItem("wheelPoints") || 0);
-const pointText = document.getElementById("points");
-const message = document.getElementById("message");
-
-function update() {
-    pointText.textContent = points;
-    localStorage.setItem("wheelPoints", points);
-}
-
-function draw() {
-    ctx.clearRect(0, 0, size, size);
-    const step = Math.PI * 2 / prizes.length;
-
-    prizes.forEach((p, i) => {
-        let start = angle + i * step;
-        let end = start + step;
-
-        ctx.beginPath();
-        ctx.moveTo(center, center);
-        ctx.arc(center, center, radius, start, end);
-        ctx.closePath();
-        ctx.fillStyle = colors[i % colors.length];
-        ctx.fill();
-        ctx.strokeStyle = "#fef08a";
-        ctx.lineWidth = 4;
-        ctx.stroke();
-
-        ctx.save();
-        ctx.translate(center, center);
-        ctx.rotate(start + step / 2);
-        ctx.fillStyle = "#ffffff";
-        ctx.font = "bold 24px Arial";
-        ctx.textAlign = "right";
-        ctx.shadowColor = "rgba(0,0,0,0.8)";
-        ctx.shadowBlur = 4;
-        ctx.fillText(p + " TL", radius - 25, 8);
-        ctx.restore();
-    });
-
-    ctx.beginPath();
-    ctx.arc(center, center, 50, 0, Math.PI * 2);
-    ctx.fillStyle = "#ca8a04";
-    ctx.fill();
-    ctx.strokeStyle = "#fef08a";
-    ctx.lineWidth = 8;
-    ctx.stroke();
-
-    ctx.fillStyle = "#fde047";
-    ctx.font = "bold 30px Arial";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText("★", center, center);
-}
-
-draw();
-update();
-
-// İstediğin net oranlara göre ayarlanmış kazanan belirleme sistemi
-function getWeightedPrizeIndex() {
-    const rnd = Math.random() * 100;
-    let targetValue = 1;
-
-    if (rnd < 1) {
-        targetValue = 100;    // %1 ihtimal
-    } else if (rnd < 2) {
-        targetValue = 50;     // %1 ihtimal
-    } else if (rnd < 17) {
-        targetValue = 20;     // %15 ihtimal
-    } else if (rnd < 67) {
-        targetValue = 10;     // %50 ihtimal
-    } else if (rnd < 95) {
-        targetValue = 5;      // %75'e denk gelen aralık
-    } else {
-        targetValue = 1;      // %99'a denk gelen ana oran
-    }
-
-    let matchingIndices = [];
-    prizes.forEach((p, idx) => { if (p === targetValue) matchingIndices.push(idx); });
-    return matchingIndices[Math.floor(Math.random() * matchingIndices.length)];
-}
-
-document.getElementById("spin").onclick = () => {
-    if (spinning) return;
-    spinning = true;
-    document.getElementById("spin").disabled = true;
-    message.textContent = "Çark dönüyor...";
-
-    const chosen = getWeightedPrizeIndex();
-    const step = Math.PI * 2 / prizes.length;
-    const targetAngle = -Math.PI / 2 - (chosen * step) - (step / 2);
-    const extraTurns = 8 * Math.PI * 2;
-    const currentAngle = angle;
+    max-width: 420px;
+    display: flex;
     
-    const relativeTarget = (targetAngle % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
-    const currentMod = (currentAngle % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
-    let diff = relativeTarget - currentMod;
-    if (diff < 0) diff += Math.PI * 2;
-
-    const finish = currentAngle + extraTurns + diff;
-    const duration = 5000, begin = performance.now();
-
-    function animate(now) {
-        let t = Math.min(1, (now - begin) / duration);
-        let ease = 1 - Math.pow(1 - t, 4);
-        angle = currentAngle + (finish - currentAngle) * ease;
-        draw();
-
-        if (t < 1) {
-            requestAnimationFrame(animate);
-        } else {
-            angle = finish;
-            draw();
-            points += prizes[chosen];
-            update();
-            message.textContent = "Tebrikler! " + prizes[chosen] + " TL kazandın!";
-            spinning = false;
-            document.getElementById("spin").disabled = false;
-        }
-    }
-    requestAnimationFrame(animate);
-};
-</script>
-</body>
-</html>
