@@ -65,4 +65,421 @@ body {
     width: 100%;
     max-width: 420px;
     display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: #d8b4fe;
+    padding: 0 8px;
+}
+.logout-btn {
+    background: rgba(239, 68, 68, 0.2);
+    border: 1px solid #ef4444;
+    color: #fca5a5;
+    border-radius: 10px;
+    padding: 3px 8px;
+    font-size: 11px;
+    cursor: pointer;
+}
+.wheel-container {
+    position: relative;
+    width: min(82vw, 320px);
+    margin: 5px auto;
+}
+canvas {
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 0 20px rgba(234, 179, 8, 0.4));
+}
+.pointer {
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0; 
+    height: 0; 
+    border-left: 14px solid transparent;
+    border-right: 14px solid transparent;
+    border-top: 28px solid #ef4444;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
+    z-index: 10;
+}
+.spin-btn {
+    width: 100%;
+    max-width: 360px;
+    background: linear-gradient(to bottom, #fde047, #ca8a04);
+    color: #422006;
+    border: 3px solid #fef08a;
+    border-radius: 25px;
+    padding: 14px;
+    font-size: 20px;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 0 6px 0 #854d0e, 0 0 25px rgba(250, 204, 21, 0.7);
+    text-transform: uppercase;
+    margin: 10px 0;
+    letter-spacing: 1px;
+}
+.spin-btn:active {
+    transform: translateY(4px);
+    box-shadow: 0 2px 0 #854d0e, 0 0 15px rgba(250, 204, 21, 0.7);
+}
+.spin-btn:disabled {
+    opacity: 0.6;
+    transform: none;
+}
+#message {
+    min-height: 24px;
+    font-size: 15px;
+    font-weight: bold;
+    color: #facc15;
+}
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 6, 25, 0.95);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    padding: 20px;
+}
+.modal-box {
+    background: linear-gradient(145deg, #1e1344, #120b29);
+    border: 2px solid #a855f7;
+    border-radius: 20px;
+    padding: 22px;
+    width: 100%;
+    max-width: 340px;
+    box-shadow: 0 0 25px rgba(168, 85, 247, 0.6);
+    text-align: center;
+}
+.modal-box h2 {
+    margin-top: 0;
+    color: #fde047;
+    font-size: 20px;
+}
+.modal-box input {
+    width: 100%;
+    padding: 11px;
+    margin: 8px 0;
+    border-radius: 12px;
+    border: 1px solid #6b21a8;
+    background: #0f0924;
+    color: white;
+    font-size: 14px;
+}
+.modal-btn {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 15px;
+    cursor: pointer;
+    background: linear-gradient(135deg, #22c55e, #15803d);
+    color: white;
+}
+.switch-text {
+    margin-top: 12px;
+    font-size: 13px;
+    color: #c084fc;
+    cursor: pointer;
+    text-decoration: underline;
+}
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<div id="authModal" class="modal">
+    <div class="modal-box">
+        <h2 id="authTitle">Kayıt Ol</h2>
+        <input type="text" id="usernameInput" placeholder="Kullanıcı Adı" autocomplete="off">
+        <input type="password" id="passwordInput" placeholder="Şifre">
+        <div id="authError" style="color:#f87171; font-size:12px; margin-top:4px;"></div>
+        <button id="authSubmitBtn" class="modal-btn">Kayıt Ol ve Başla</button>
+        <div id="authSwitch" class="switch-text">Zaten hesabın var mı? Giriş Yap</div>
+    </div>
+</div>
+
+<div id="actionModal" class="modal hidden">
+    <div class="modal-box">
+        <h2 id="actionTitle">İşlem</h2>
+        <p id="actionDesc" style="font-size:13px; color:#e9d5ff;"></p>
+        <input type="number" id="amountInput" placeholder="Tutar (TL)">
+        <button id="actionConfirmBtn" class="modal-btn">Onayla</button>
+        <button onclick="closeActionModal()" class="modal-btn" style="background:#4b5563; margin-top:6px;">İptal</button>
+    </div>
+</div>
+
+<div class="header">
+    <div class="balance-box">⭐ Bakiye: <span id="points">0</span> TL</div>
+    <div class="top-buttons">
+        <button class="btn-top btn-deposit" onclick="openActionModal('deposit')">Para Yükle</button>
+        <button class="btn-top btn-withdraw" onclick="openActionModal('withdraw')">Para Çek</button>
+    </div>
+</div>
+
+<div class="user-bar">
+    <span>👤 Hesap: <b id="activeUser">-</b></span>
+    <button class="logout-btn" onclick="logout()">Çıkış Yap</button>
+</div>
+
+<div>
+    <h1 style="margin:2px 0; color:#fef08a; font-size:22px; text-shadow: 0 0 10px rgba(254,240,138,0.5);">ŞANS ÇARKI</h1>
+</div>
+
+<div class="wheel-container">
+    <div class="pointer"></div>
+    <canvas id="wheel" width="600" height="600"></canvas>
+</div>
+
+<div id="message">Şansını dene, büyük ödüller kazan!</div>
+
+<button id="spin" class="spin-btn">ÇARKI ÇEVİR</button>
+
+<script>
+let users = JSON.parse(localStorage.getItem("wheelUsers") || "{}");
+let currentUser = localStorage.getItem("wheelCurrentUser") || null;
+let isRegisterMode = true;
+
+const authModal = document.getElementById("authModal");
+const authTitle = document.getElementById("authTitle");
+const authSubmitBtn = document.getElementById("authSubmitBtn");
+const authSwitch = document.getElementById("authSwitch");
+const authError = document.getElementById("authError");
+const pointText = document.getElementById("points");
+const activeUserText = document.getElementById("activeUser");
+const message = document.getElementById("message");
+
+function checkAuth() {
+    if (currentUser && users[currentUser]) {
+        authModal.classList.add("hidden");
+        activeUserText.textContent = currentUser;
+        updateBalanceUI();
+    } else {
+        authModal.classList.remove("hidden");
+    }
+}
+
+authSwitch.onclick = () => {
+    isRegisterMode = !isRegisterMode;
+    authError.textContent = "";
+    if (isRegisterMode) {
+        authTitle.textContent = "Kayıt Ol";
+        authSubmitBtn.textContent = "Kayıt Ol ve Başla";
+        authSwitch.textContent = "Zaten hesabın var mı? Giriş Yap";
+    } else {
+        authTitle.textContent = "Giriş Yap";
+        authSubmitBtn.textContent = "Giriş Yap";
+        authSwitch.textContent = "Hesabın yok mu? Kayıt Ol";
+    }
+};
+
+authSubmitBtn.onclick = () => {
+    const uname = document.getElementById("usernameInput").value.trim();
+    const pass = document.getElementById("passwordInput").value.trim();
+    if (!uname || !pass) {
+        authError.textContent = "Kullanıcı adı ve şifre boş bırakılamaz.";
+        return;
+    }
+    if (isRegisterMode) {
+        if (users[uname]) {
+            authError.textContent = "Bu kullanıcı adı zaten alınmış.";
+            return;
+        }
+        users[uname] = { password: pass, balance: 0 };
+        saveUsers();
+        currentUser = uname;
+        localStorage.setItem("wheelCurrentUser", currentUser);
+        checkAuth();
+    } else {
+        if (!users[uname] || users[uname].password !== pass) {
+            authError.textContent = "Kullanıcı adı veya şifre hatalı.";
+            return;
+        }
+        currentUser = uname;
+        localStorage.setItem("wheelCurrentUser", currentUser);
+        checkAuth();
+    }
+};
+
+function logout() {
+    currentUser = null;
+    localStorage.removeItem("wheelCurrentUser");
+    document.getElementById("usernameInput").value = "";
+    document.getElementById("passwordInput").value = "";
+    authError.textContent = "";
+    checkAuth();
+}
+
+function saveUsers() {
+    localStorage.setItem("wheelUsers", JSON.stringify(users));
+}
+
+function updateBalanceUI() {
+    if (currentUser && users[currentUser]) {
+        pointText.textContent = users[currentUser].balance;
+    }
+}
+
+let currentAction = "";
+function openActionModal(type) {
+    currentAction = type;
+    document.getElementById("amountInput").value = "";
+    if (type === "deposit") {
+        document.getElementById("actionTitle").textContent = "Para Yükle";
+        document.getElementById("actionDesc").textContent = "Hesabınıza eklemek istediğiniz tutarı girin:";
+    } else {
+        document.getElementById("actionTitle").textContent = "Para Çek";
+        document.getElementById("actionDesc").textContent = "Çekmek istediğiniz tutarı girin (Mevcut: " + users[currentUser].balance + " TL):";
+    }
+    document.getElementById("actionModal").classList.remove("hidden");
+}
+
+function closeActionModal() {
+    document.getElementById("actionModal").classList.add("hidden");
+}
+
+document.getElementById("actionConfirmBtn").onclick = () => {
+    const val = Number(document.getElementById("amountInput").value);
+    if (!val || val <= 0) {
+        alert("Geçerli bir tutar girin.");
+        return;
+    }
+    if (currentAction === "deposit") {
+        users[currentUser].balance += val;
+        saveUsers();
+        updateBalanceUI();
+        message.textContent = val + " TL hesabınıza yüklendi!";
+    } else {
+        if (val > users[currentUser].balance) {
+            alert("Yetersiz bakiye!");
+            return;
+        }
+        users[currentUser].balance -= val;
+        saveUsers();
+        updateBalanceUI();
+        message.textContent = val + " TL çekim talebi alındı!";
+    }
+    closeActionModal();
+};
+
+const prizes = [100, 50, 20, 10, 10, 5, 5, 1, 1, 1, 1, 1, 1, 5, 5, 10, 10, 20, 50, 100];
+const canvas = document.getElementById("wheel");
+const ctx = canvas.getContext("2d");
+const size = canvas.width, center = size / 2, radius = 280;
+const colors = ["#9333ea", "#0ea5e9", "#22c55e", "#f97316", "#ef4444"];
+let angle = 0, spinning = false;
+
+function draw() {
+    ctx.clearRect(0, 0, size, size);
+    const step = Math.PI * 2 / prizes.length;
+
+    prizes.forEach((p, i) => {
+        let start = angle + i * step;
+        let end = start + step;
+
+        ctx.beginPath();
+        ctx.moveTo(center, center);
+        ctx.arc(center, center, radius, start, end);
+        ctx.closePath();
+        ctx.fillStyle = colors[i % colors.length];
+        ctx.fill();
+        ctx.strokeStyle = "#fef08a";
+        ctx.lineWidth = 4;
+        ctx.stroke();
+
+        ctx.save();
+        ctx.translate(center, center);
+        ctx.rotate(start + step / 2);
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "bold 24px Arial";
+        ctx.textAlign = "right";
+        ctx.shadowColor = "rgba(0,0,0,0.8)";
+        ctx.shadowBlur = 4;
+        ctx.fillText(p + " TL", radius - 25, 8);
+        ctx.restore();
+    });
+
+    ctx.beginPath();
+    ctx.arc(center, center, 50, 0, Math.PI * 2);
+    ctx.fillStyle = "#ca8a04";
+    ctx.fill();
+    ctx.strokeStyle = "#fef08a";
+    ctx.lineWidth = 8;
+    ctx.stroke();
+
+    ctx.fillStyle = "#fde047";
+    ctx.font = "bold 30px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("★", center, center);
+}
+
+draw();
+checkAuth();
+
+function getWeightedPrizeIndex() {
+    const rnd = Math.random() * 100;
+    let targetValue = 1;
+
+    if (rnd < 1) targetValue = 100;
+    else if (rnd < 2) targetValue = 50;
+    else if (rnd < 17) targetValue = 20;
+    else if (rnd < 67) targetValue = 10;
+    else if (rnd < 95) targetValue = 5;
+    else targetValue = 1;
+
+    let matchingIndices = [];
+    prizes.forEach((p, idx) => { if (p === targetValue) matchingIndices.push(idx); });
+    return matchingIndices[Math.floor(Math.random() * matchingIndices.length)];
+}
+
+document.getElementById("spin").onclick = () => {
+    if (spinning || !currentUser) return;
+    spinning = true;
+    document.getElementById("spin").disabled = true;
+    message.textContent = "Çark dönüyor...";
+
+    const chosen = getWeightedPrizeIndex();
+    const step = Math.PI * 2 / prizes.length;
+    const targetAngle = -Math.PI / 2 - (chosen * step) - (step / 2);
+    const extraTurns = 8 * Math.PI * 2;
+    const currentAngle = angle;
     
+    const relativeTarget = (targetAngle % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
+    const currentMod = (currentAngle % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
+    let diff = relativeTarget - currentMod;
+    if (diff < 0) diff += Math.PI * 2;
+
+    const finish = currentAngle + extraTurns + diff;
+    const duration = 5000, begin = performance.now();
+
+    function animate(now) {
+        let t = Math.min(1, (now - begin) / duration);
+        let ease = 1 - Math.pow(1 - t, 4);
+        angle = currentAngle + (finish - currentAngle) * ease;
+        draw();
+
+        if (t < 1) {
+            requestAnimationFrame(animate);
+        } else {
+            angle = finish;
+            draw();
+            users[currentUser].balance += prizes[chosen];
+            saveUsers();
+            updateBalanceUI();
+            message.textContent = "Tebrikler! " + prizes[chosen] + " TL kazandın!";
+            spinning = false;
+            document.getElementById("spin").disabled = false;
+        }
+    }
+    requestAnimationFrame(animate);
+};
+</script>
+</body>
+                                                                                               </html>
+                                                                                               
