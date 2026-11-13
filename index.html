@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Puan Çarkı</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#100d25;color:white;font-family:Arial;text-align:center;padding:20px}
+h1{color:#ffd65a}
+.balance{background:#241b46;padding:15px;border-radius:15px;display:inline-block;margin:10px}
+.wheel-wrap{position:relative;width:min(85vw,340px);margin:25px auto}
+canvas{width:100%;height:auto}
+.pointer{position:absolute;top:-12px;left:50%;transform:translateX(-50%);font-size:35px;color:white;z-index:2}
+button{border:0;border-radius:12px;padding:15px 25px;font-size:17px;font-weight:bold;background:#ffd34f;color:#21143c}
+button:disabled{opacity:.5}
+#message{min-height:30px;margin:15px}
+</style>
+</head>
+<body>
+<h1>🎡 PUAN ÇARKI</h1>
+<div class="balance">⭐ Puanın: <b id="points">0</b></div>
+<div class="wheel-wrap">
+<div class="pointer">▼</div>
+<canvas id="wheel" width="600" height="600"></canvas>
+</div>
+<button id="spin">ÜCRETSİZ ÇEVİR</button>
+<div id="message">Bol şans!</div>
+<script>
+const prizes=[100,50,20,10,5,1,100,50,20,10,5,1,50,20,10,5,1,20,10,5];
+const canvas=document.getElementById("wheel");
+const ctx=canvas.getContext("2d");
+const size=canvas.width,center=size/2,radius=285;
+const colors=["#ff477e","#ffbd35","#35c9ff","#8c61ff","#38d996"];
+let angle=0,spinning=false;
+let points=Number(localStorage.getItem("wheelPoints")||0);
+const pointText=document.getElementById("points");
+const message=document.getElementById("message");
+function update(){pointText.textContent=points;localStorage.setItem("wheelPoints",points)}
+function draw(){
+ctx.clearRect(0,0,size,size);
+const step=Math.PI*2/prizes.length;
+prizes.forEach((p,i)=>{
+let start=angle+i*step-Math.PI/2;
+ctx.beginPath();ctx.moveTo(center,center);
+ctx.arc(center,center,radius,start,start+step);
+ctx.closePath();ctx.fillStyle=colors[i%colors.length];ctx.fill();
+ctx.strokeStyle="#fff";ctx.lineWidth=3;ctx.stroke();
+ctx.save();ctx.translate(center,center);ctx.rotate(start+step/2);
+ctx.fillStyle="#fff";ctx.font="bold 27px Arial";ctx.textAlign="right";
+ctx.fillText(p+" P",radius-20,9);ctx.restore();
+});
+ctx.beginPath();ctx.arc(center,center,48,0,Math.PI*2);
+ctx.fillStyle="#17102e";ctx.fill();ctx.strokeStyle="#ffd34f";ctx.lineWidth=7;ctx.stroke();
+ctx.fillStyle="#ffd34f";ctx.font="bold 19px Arial";ctx.textAlign="center";
+ctx.fillText("ÇEVİR",center,center+7);
+}
+draw();update();
+document.getElementById("spin").onclick=()=>{
+if(spinning)return;
+spinning=true;
+document.getElementById("spin").disabled=true;
+message.textContent="Çark dönüyor...";
+const chosen=Math.floor(Math.random()*prizes.length);
+const step=Math.PI*2/prizes.length;
+const target=-(chosen*step+step/2)+Math.PI/2;
+const current=((angle%(Math.PI*2))+Math.PI*2)%(Math.PI*2);
+const desired=((target%(Math.PI*2))+Math.PI*2)%(Math.PI*2);
+const extra=8*Math.PI*2+(desired-current+Math.PI*2)%(Math.PI*2);
+const start=angle,finish=angle+extra,duration=4500,begin=performance.now();
+function animate(now){
+let t=Math.min(1,(now-begin)/duration);
+let ease=1-Math.pow(1-t,4);
+angle=start+(finish-start)*ease;draw();
+if(t<1)requestAnimationFrame(animate);
+else{
+angle=finish;points+=prizes[chosen];update();
+message.textContent="Tebrikler! "+prizes[chosen]+" puan kazandın.";
+spinning=false;document.getElementById("spin").disabled=false;
+}
+}
+requestAnimationFrame(animate);
+};
+</script>
+</body>
+</html>
