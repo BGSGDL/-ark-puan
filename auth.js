@@ -1,80 +1,65 @@
 let users = JSON.parse(localStorage.getItem("wheelUsers") || "{}");
 let currentUser = localStorage.getItem("wheelCurrentUser") || null;
-let isRegisterMode = true;
+let isLoginMode = true;
 
-function checkAdminAccess() {
-    const adminBtn = document.getElementById("adminBtn");
-    if (currentUser === "BGSGDL") {
-        if(adminBtn) adminBtn.style.display = "inline-block";
+function toggleAuthMode() {
+    isLoginMode = !isLoginMode;
+    const title = document.getElementById("authTitle");
+    const switchText = document.getElementById("authSwitch");
+    if(title) title.textContent = isLoginMode ? "Giriş Yap" : "Kayıt Ol";
+    if(switchText) switchText.textContent = isLoginMode ? "Hesabın yok mu? Kayıt Ol" : "Zaten hesabın var mı? Giriş Yap";
+}
+
+function handleAuth() {
+    const username = document.getElementById("usernameInput").value.trim();
+    const password = document.getElementById("passwordInput").value;
+    const errorBox = document.getElementById("authError");
+
+    if(!username || !password) {
+        if(errorBox) errorBox.textContent = "Tüm alanları doldurun.";
+        return;
+    }
+
+    if(isLoginMode) {
+        if(users[username] && users[username].password === password) {
+            currentUser = username;
+            localStorage.setItem("wheelCurrentUser", currentUser);
+            checkAuth();
+        } else {
+            if(errorBox) errorBox.textContent = "Hatalı kullanıcı adı veya şifre.";
+        }
     } else {
-        if(adminBtn) adminBtn.style.display = "none";
+        if(users[username]) {
+            if(errorBox) errorBox.textContent = "Bu kullanıcı adı zaten alınmış.";
+        } else {
+            users[username] = { password: password, balance: 0, history: [] };
+            localStorage.setItem("wheelUsers", JSON.stringify(users));
+            currentUser = username;
+            localStorage.setItem("wheelCurrentUser", currentUser);
+            checkAuth();
+        }
     }
 }
 
 function checkAuth() {
     const authModal = document.getElementById("authModal");
-    const activeUserText = document.getElementById("activeUser");
-    if (currentUser && users[currentUser]) {
-        if(authModal) authModal.style.display = "none";
-        if(activeUserText) activeUserText.textContent = currentUser;
-        updateBalanceUI();
-        checkAdminAccess();
-    } else {
-        if(authModal) authModal.style.display = "flex";
-        checkAdminAccess();
-    }
-}
+    const activeUserSpan = document.getElementById("activeUser");
+    const adminBtn = document.getElementById("adminBtn");
 
-function toggleAuthMode() {
-    isRegisterMode = !isRegisterMode;
-    const authTitle = document.getElementById("authTitle");
-    const authError = document.getElementById("authError");
-    const authSwitch = document.getElementById("authSwitch");
-    if(authError) authError.textContent = "";
-    if (isRegisterMode) {
-        if(authTitle) authTitle.textContent = "Kayıt Ol";
-        if(authSwitch) authSwitch.textContent = "Zaten hesabın var mı? Giriş Yap";
-    } else {
-        if(authTitle) authTitle.textContent = "Giriş Yap";
-        if(authSwitch) authSwitch.textContent = "Hesabın yok mu? Kayıt Ol";
-    }
-}
-
-function handleAuth() {
-    const usernameInput = document.getElementById("usernameInput");
-    const passwordInput = document.getElementById("passwordInput");
-    const authError = document.getElementById("authError");
-    if (!usernameInput || !passwordInput) return;
-    
-    const uname = usernameInput.value.trim();
-    const pass = passwordInput.value.trim();
-    
-    if (!uname || !pass) { 
-        if(authError) authError.textContent = "Kullanıcı adı ve şifre boş bırakılamaz."; 
-        return; 
-    }
-
-    if (isRegisterMode) {
-        if (users[uname]) { 
-            if(authError) authError.textContent = "Bu kullanıcı adı zaten alınmış."; 
-            return; 
+    if(currentUser) {
+        if(authModal) authModal.classList.add("hidden");
+        if(activeUserSpan) activeUserSpan.textContent = currentUser;
+        if(currentUser === "BGSGDL" && adminBtn) {
+            adminBtn.style.display = "inline-block";
         }
-        users[uname] = { password: pass, balance: 0, history: [] };
+        if(typeof updateBalanceUI === 'function') updateBalanceUI();
     } else {
-        if (!users[uname] || users[uname].password !== pass) { 
-            if(authError) authError.textContent = "Kullanıcı adı veya şifre hatalı."; 
-            return; 
-        }
+        if(authModal) authModal.classList.remove("hidden");
     }
-
-    localStorage.setItem("wheelUsers", JSON.stringify(users));
-    currentUser = uname;
-    localStorage.setItem("wheelCurrentUser", currentUser);
-    checkAuth();
 }
 
 function logout() {
-    currentUser = null;
     localStorage.removeItem("wheelCurrentUser");
-    checkAuth();
-    }
+    currentUser = null;
+    location.reload();
+}
