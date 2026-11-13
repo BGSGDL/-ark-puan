@@ -64,241 +64,8 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 12px;
-    color: #d8b4fe;
-    padding: 0 8px;
-}
-.logout-btn {
-    background: rgba(239, 68, 68, 0.2);
-    border: 1px solid #ef4444;
-    color: #fca5a5;
-    border-radius: 10px;
-    padding: 3px 8px;
-    font-size: 11px;
-    cursor: pointer;
-}
-.wheel-container {
-    position: relative;
-    width: min(82vw, 320px);
-    margin: 5px auto;
-}
-canvas {
-    width: 100%;
-    height: auto;
-    filter: drop-shadow(0 0 20px rgba(234, 179, 8, 0.4));
-}
-.pointer {
-    position: absolute;
-    top: -8px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0; 
-    height: 0; 
-    border-left: 14px solid transparent;
-    border-right: 14px solid transparent;
-    border-top: 28px solid #ef4444;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
-    z-index: 10;
-}
-.spin-btn {
-    width: 100%;
-    max-width: 360px;
-    background: linear-gradient(to bottom, #fde047, #ca8a04);
-    color: #422006;
-    border: 3px solid #fef08a;
-    border-radius: 25px;
-    padding: 14px;
-    font-size: 20px;
-    font-weight: 900;
-    cursor: pointer;
-    box-shadow: 0 6px 0 #854d0e, 0 0 25px rgba(250, 204, 21, 0.7);
-    text-transform: uppercase;
-    margin: 10px 0;
-    letter-spacing: 1px;
-}
-.spin-btn:active {
-    transform: translateY(4px);
-    box-shadow: 0 2px 0 #854d0e, 0 0 15px rgba(250, 204, 21, 0.7);
-}
-.spin-btn:disabled { opacity: 0.6; transform: none; }
-#message {
-    min-height: 24px;
-    font-size: 15px;
-    font-weight: bold;
-    color: #facc15;
-}
 
-.modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(10, 6, 25, 0.98);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    padding: 20px;
-}
-.modal-box {
-    background: linear-gradient(145deg, #1e1344, #120b29);
-    border: 2px solid #a855f7;
-    border-radius: 20px;
-    padding: 20px;
-    width: 100%;
-    max-width: 320px;
-    box-shadow: 0 0 25px rgba(168, 85, 247, 0.6);
-    text-align: center;
-}
-.modal-box h2 { margin-top: 0; color: #fde047; font-size: 18px; }
-.modal-box input, .modal-box textarea {
-    width: 100%;
-    padding: 10px;
-    margin: 6px 0;
-    border-radius: 10px;
-    border: 1px solid #6b21a8;
-    background: #0f0924;
-    color: white;
-    font-size: 13px;
-}
-.file-label {
-    display: block;
-    background: rgba(168, 85, 247, 0.2);
-    border: 1px dashed #a855f7;
-    padding: 8px;
-    border-radius: 10px;
-    font-size: 12px;
-    color: #e9d5ff;
-    margin: 6px 0;
-    cursor: pointer;
-}
-.modal-btn {
-    width: 100%;
-    padding: 11px;
-    margin-top: 8px;
-    border: none;
-    border-radius: 10px;
-    font-weight: bold;
-    font-size: 14px;
-    cursor: pointer;
-    background: linear-gradient(135deg, #22c55e, #15803d);
-    color: white;
-}
-.switch-text {
-    margin-top: 10px;
-    font-size: 12px;
-    color: #c084fc;
-    cursor: pointer;
-    text-decoration: underline;
-}
-.hidden { display: none !important; }
-.history-item {
-    background: rgba(255,255,255,0.05);
-    padding: 6px;
-    margin: 4px 0;
-    border-radius: 8px;
-    font-size: 11px;
-    text-align: left;
-    display: flex;
-    justify-content: space-between;
-}
-</style>
-</head>
-<body>
-
-<div id="authModal" class="modal">
-    <div class="modal-box">
-        <h2 id="authTitle">Kayıt Ol</h2>
-        <input type="text" id="usernameInput" placeholder="Kullanıcı Adı" autocomplete="off">
-        <input type="password" id="passwordInput" placeholder="Şifre">
-        <div id="authError" style="color:#f87171; font-size:11px; margin-top:3px;"></div>
-        <button id="authSubmitBtn" class="modal-btn" onclick="handleAuth()">Kayıt Ol ve Başla</button>
-        <div id="authSwitch" class="switch-text" onclick="toggleAuthMode()">Zaten hesabın var mı? Giriş Yap</div>
-    </div>
-</div>
-
-<!-- Para Yükle Modalı -->
-<div id="depositModal" class="modal hidden">
-    <div class="modal-box">
-        <h2>Para Yükle</h2>
-        <p style="font-size:11px; color:#e9d5ff; margin-bottom:6px;">Lütfen aşağıdaki hesaba yatırım yapıp dekont yükleyiniz.</p>
-        <div style="background:#0f0924; padding:8px; border-radius:10px; border:1px dashed #a855f7; font-size:11px; margin-bottom:6px; color:#facc15; text-align:left;">
-            <b>Alıcı:</b> Ramazan Yıldırım<br>
-            <b>IBAN:</b> TR31 0006 7010 0000 0025 0393 14
-        </div>
-        <input type="number" id="depositAmount" placeholder="Yatırılan Tutar (TL)">
-        <input type="text" id="depositName" placeholder="Gönderen Ad Soyad" autocomplete="off">
-        <label class="file-label">
-            📄 Dekont Dosyası Seç (PDF/Görsel)
-            <input type="file" id="depositFile" style="display:none;" accept=".pdf,image/*">
-        </label>
-        <div id="fileNameDisplay" style="font-size:10px; color:#4ade80; margin-bottom:4px;"></div>
-        <button onclick="submitDeposit()" class="modal-btn">Bildirim Gönder</button>
-        <button onclick="closeModals()" class="modal-btn" style="background:#4b5563; margin-top:4px;">İptal</button>
-    </div>
-</div>
-
-<!-- Para Çek Modalı -->
-<div id="withdrawModal" class="modal hidden">
-    <div class="modal-box">
-        <h2>Para Çek</h2>
-        <p style="font-size:11px; color:#e9d5ff; margin-bottom:6px;" id="withdrawInfo">Çekilebilecek Bakiye: 0 TL</p>
-        <input type="number" id="withdrawAmount" placeholder="Çekilecek Tutar (TL)">
-        <input type="text" id="withdrawName" placeholder="Ad Soyad (Hesap Sahibi)" autocomplete="off">
-        <input type="text" id="withdrawIban" placeholder="TR ile başlayan 26 haneli IBAN" autocomplete="off">
-        <button onclick="submitWithdraw()" class="modal-btn" style="background:#3b82f6;">Çekim Talebi Ver</button>
-        <button onclick="closeModals()" class="modal-btn" style="background:#4b5563; margin-top:4px;">İptal</button>
-    </div>
-</div>
-
-<!-- Geçmiş Modalı -->
-<div id="historyModal" class="modal hidden">
-    <div class="modal-box">
-        <h2>İşlem Geçmişi</h2>
-        <div id="historyList" style="max-height:160px; overflow-y:auto; margin:8px 0;"></div>
-        <button onclick="closeModals()" class="modal-btn" style="background:#4b5563;">Kapat</button>
-    </div>
-</div>
-
-<!-- Destek Modalı -->
-<div id="supportModal" class="modal hidden">
-    <div class="modal-box">
-        <h2>Destek Hattı</h2>
-        <p style="font-size:11px; color:#e9d5ff; margin-bottom:8px;">Sorun veya talebinizi yazın, yöneticimize bildirilecektir.</p>
-        <textarea id="supportMessage" placeholder="Mesajınızı buraya yazın..." rows="3"></textarea>
-        <button onclick="submitSupport()" class="modal-btn" style="background:#f97316;">Destek Talebi Gönder</button>
-        <button onclick="closeModals()" class="modal-btn" style="background:#4b5563; margin-top:4px;">Kapat</button>
-    </div>
-</div>
-
-<div class="header">
-    <div class="balance-box">⭐ <span id="points">0</span> TL</div>
-    <div class="top-buttons">
-        <button class="btn-top btn-deposit" onclick="openModal('depositModal')">Yükle</button>
-        <button class="btn-top btn-withdraw" onclick="openModal('withdrawModal')">Çek</button>
-        <button class="btn-top btn-history" onclick="openHistory()">Geçmiş</button>
-        <button class="btn-top btn-support" onclick="openModal('supportModal')">Destek</button>
-    </div>
-</div>
-
-<div class="user-bar">
-    <span>👤 Hesap: <b id="activeUser">-</b></span>
-    <button class="logout-btn" onclick="logout()">Çıkış Yap</button>
-</div>
-
-<div>
-    <h1 style="margin:2px 0; color:#fef08a; font-size:22px; text-shadow: 0 0 10px rgba(254,240,138,0.5);">ŞANS ÇARKI</h1>
-    <div style="font-size:12px; color:#facc15; margin-bottom:4px;">Çeviri Ücreti: 10 TL</div>
-</div>
-
-<div class="wheel-container">
-    <div class="pointer"></div>
-    <canvas id="wheel" width="600" height="600"></canvas>
-</div>
-
-<div id="message">Şansını dene, büyük ödüller kazan!</div>
-
-<button id="spin" class="spin-btn">ÇARKI ÇEVİR (10 TL)</button>
-
-<script>
+    <script>
 let users = JSON.parse(localStorage.getItem("wheelUsers") || "{}");
 let currentUser = localStorage.getItem("wheelCurrentUser") || null;
 let isRegisterMode = true;
@@ -480,5 +247,141 @@ function openHistory() {
     listDiv.innerHTML = "";
     const hist = users[currentUser].history || [];
     if(hist.length === 0) {
-        listDiv.innerHTML = "<div style='font-size:12px; color:#aaa; text-align:center;'>Henüz işlem geçmiş
+        listDiv.innerHTML = "<div style='font-size:12px; color:#aaa; text-align:center;'>Henüz işlem geçmişi yok.</div>";
+    } else {
+        hist.forEach(h => {
+            listDiv.innerHTML += `<div class="history-item"><span>${h.text}</span><span style="color:#aaa; font-size:10px;">${h.date}</span></div>`;
+        });
+    }
+    document.getElementById("historyModal").classList.remove("hidden");
+}
+
+const prizes = [100, 50, 20, 10, 10, 5, 5, 1, 1, 1, 1, 1, 1, 5, 5, 10, 10, 20, 50, 100];
+const canvas = document.getElementById("wheel");
+const ctx = canvas.getContext("2d");
+const size = canvas.width, center = size / 2, radius = 280;
+const colors = ["#9333ea", "#0ea5e9", "#22c55e", "#f97316", "#ef4444"];
+let angle = 0, spinning = false;
+
+function draw() {
+    ctx.clearRect(0, 0, size, size);
+    const step = Math.PI * 2 / prizes.length;
+
+    prizes.forEach((p, i) => {
+        let start = angle + i * step;
+        let end = start + step;
+
+        ctx.beginPath();
+        ctx.moveTo(center, center);
+        ctx.arc(center, center, radius, start, end);
+        ctx.closePath();
+        ctx.fillStyle = colors[i % colors.length];
+        ctx.fill();
+        ctx.strokeStyle = "#fef08a";
+        ctx.lineWidth = 4;
+        ctx.stroke();
+
+        ctx.save();
+        ctx.translate(center, center);
+        ctx.rotate(start + step / 2);
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "bold 24px Arial";
+        ctx.textAlign = "right";
+        ctx.shadowColor = "rgba(0,0,0,0.8)";
+        ctx.shadowBlur = 4;
+        ctx.fillText(p + " TL", radius - 25, 8);
+        ctx.restore();
+    });
+
+    ctx.beginPath();
+    ctx.arc(center, center, 50, 0, Math.PI * 2);
+    ctx.fillStyle = "#ca8a04";
+    ctx.fill();
+    ctx.strokeStyle = "#fef08a";
+    ctx.lineWidth = 8;
+    ctx.stroke();
+
+    ctx.fillStyle = "#fde047";
+    ctx.font = "bold 30px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("★", center, center);
+}
+
+draw();
+checkAuth();
+
+function getWeightedPrizeIndex() {
+    const rnd = Math.random() * 1000;
+    let targetValue = 1;
+
+    if (rnd < 2) targetValue = 100;
+    else if (rnd < 8) targetValue = 50;
+    else if (rnd < 40) targetValue = 20;
+    else if (rnd < 150) targetValue = 10;
+    else if (rnd < 450) targetValue = 5;
+    else targetValue = 1;
+
+    let matchingIndices = [];
+    prizes.forEach((p, idx) => { if (p === targetValue) matchingIndices.push(idx); });
+    return matchingIndices[Math.floor(Math.random() * matchingIndices.length)];
+}
+
+document.getElementById("spin").onclick = () => {
+    if (spinning || !currentUser) return;
+
+    if (users[currentUser].balance < 10) {
+        alert("Yetersiz bakiye! Çarkı çevirmek için en az 10 TL gereklidir.");
+        return;
+    }
+
+    users[currentUser].balance -= 10;
+    if(!users[currentUser].history) users[currentUser].history = [];
+    users[currentUser].history.unshift({text: "Çeviri Ücreti: -10 TL", date: new Date().toLocaleDateString()});
+    localStorage.setItem("wheelUsers", JSON.stringify(users));
+    updateBalanceUI();
+
+    spinning = true;
+    document.getElementById("spin").disabled = true;
+    message.textContent = "Çark dönüyor...";
+
+    const chosen = getWeightedPrizeIndex();
+    const step = Math.PI * 2 / prizes.length;
+    const targetAngle = -Math.PI / 2 - (chosen * step) - (step / 2);
+    const extraTurns = 8 * Math.PI * 2;
+    const currentAngle = angle;
+    
+    const relativeTarget = (targetAngle % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
+    const currentMod = (currentAngle % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
+    let diff = relativeTarget - currentMod;
+    if (diff < 0) diff += Math.PI * 2;
+
+    const finish = currentAngle + extraTurns + diff;
+    const duration = 5000, begin = performance.now();
+
+    function animate(now) {
+        let t = Math.min(1, (now - begin) / duration);
+        let ease = 1 - Math.pow(1 - t, 4);
+        angle = currentAngle + (finish - currentAngle) * ease;
+        draw();
+
+        if (t < 1) {
+            requestAnimationFrame(animate);
+        } else {
+            angle = finish;
+            draw();
+            users[currentUser].balance += prizes[chosen];
+            users[currentUser].history.unshift({text: "Çarktan Kazanıldı: +" + prizes[chosen] + " TL", date: new Date().toLocaleDateString()});
+            localStorage.setItem("wheelUsers", JSON.stringify(users));
+            updateBalanceUI();
+            message.textContent = "Tebrikler! " + prizes[chosen] + " TL kazandın!";
+            spinning = false;
+            document.getElementById("spin").disabled = false;
+        }
+    }
+    requestAnimationFrame(animate);
+};
+</script>
+</body>
+</html>
     
