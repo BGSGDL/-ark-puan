@@ -1,0 +1,82 @@
+<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ödül & Kazı Kazan</title>
+<style>
+*{box-sizing:border-box} body{margin:0;font-family:'Segoe UI',system-ui,sans-serif;background:linear-gradient(180deg,#2b0057 0%,#4b0082 35%,#ff2d95 100%);color:#fff;min-height:100vh;padding-bottom:110px;overflow-x:hidden}
+a{color:#fff}.top{display:flex;align-items:center;justify-content:space-between;padding:18px 16px 6px}
+.top h1{font-size:28px;margin:0;line-height:1;text-shadow:0 4px 20px #ff2d95}.top .icons{font-size:28px;display:flex;gap:14px}
+.coins{margin:12px 16px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.4);border-radius:20px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(8px)}
+.coins .left{display:flex;gap:10px;align-items:center}.coins .num{font-size:32px;font-weight:900;line-height:1}.coins small{opacity:.8}
+.btn-add{background:linear-gradient(135deg,#ff7ad9,#a855f7);border:0;color:#fff;padding:10px 22px;border-radius:999px;font-weight:900;font-size:18px;box-shadow:0 6px 20px rgba(255,45,149,.6);cursor:pointer}
+.card{margin:14px 16px}
+.wheel-wrap{text-align:center;position:relative}.wheel-title{font-size:22px;font-weight:900;letter-spacing:1px;color:#ffd1ec;text-shadow:0 0 12px #ff2d95}
+.wheel{width:320px;height:320px;max-width:88vw;border-radius:50%;margin:8px auto;position:relative;background:conic-gradient(#ff9a3d 0 22deg,#ff2d95 22deg 44deg,#00bcd4 44deg 66deg,#ffd700 66deg 88deg,#7c4dff 88deg 110deg,#00e676 110deg 132deg,#ff6b6b 132deg 154deg,#00e5ff 154deg 176deg,#ff9800 176deg 198deg,#e040fb 198deg 220deg,#2196f3 220deg 242deg,#ff416c 242deg 264deg,#8bc34a 264deg 286deg,#ffeb3b 286deg 308deg,#ff2d95 308deg 330deg,#00c853 330deg 360deg);border:6px solid #fff;box-shadow:0 0 0 6px #ff2d95,0 0 40px #ff2d95,0 0 60px #a855f7;display:flex;align-items:center;justify-content:center;transition:transform 3s cubic-bezier(.15,.9,.25,1)}
+.wheel-center{width:92px;height:92px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:40px;box-shadow:0 0 20px #ff2d95;border:4px solid #ffb3d9}
+.pointer{font-size:36px;margin-bottom:-8px}
+.spin-btn{display:block;width:88%;max-width:420px;margin:14px auto;background:linear-gradient(135deg,#ffb3d9,#ff2d95);border:2px solid rgba(255,255,255,.6);color:#fff;padding:16px;border-radius:999px;font-size:22px;font-weight:900;cursor:pointer;box-shadow:0 10px 30px rgba(255,45,149,.6)}
+.section-title{display:flex;justify-content:space-between;align-items:center;padding:0 4px}.section-title h2{margin:0;font-size:22px}
+.scratch-row{display:flex;gap:12px;overflow-x:auto;padding:12px 2px}
+.scratch-card{min-width:170px;flex:1;border-radius:20px;overflow:hidden;background:#fff;color:#111;text-align:center;box-shadow:0 10px 25px rgba(0,0,0,.35)}
+.scratch-card .top-img{padding:14px 10px 6px;font-size:34px}.scratch-card h3{margin:4px 0;font-size:20px;line-height:1.1}.scratch-card p{margin:4px 0;font-size:12px;opacity:.8}.scratch-card .win{font-size:11px;font-weight:900;padding:10px;background:#eee}
+.c1{background:linear-gradient(135deg,#7c4dff,#2196f3)}.c2{background:linear-gradient(135deg,#ff8a80,#ff4081)}.c3{background:linear-gradient(135deg,#00e5ff,#76ff03)}
+.gift{background:rgba(0,0,0,.35);border:2px solid rgba(255,255,255,.35);border-radius:22px;padding:16px;margin:14px 16px}
+.gift h3{margin:0 0 8px}.gift .bar{height:16px;background:rgba(255,255,255,.25);border-radius:999px;overflow:hidden}.gift .fill{height:100%;background:#00e676}
+.gift button{width:100%;padding:14px;border:0;border-radius:999px;font-weight:900;font-size:17px;background:linear-gradient(135deg,#ff2d95,#ff9a3d);color:#fff;cursor:pointer;margin-top:10px}
+input,textarea{width:100%;padding:13px;border-radius:14px;border:1px solid rgba(255,255,255,.4);background:rgba(0,0,0,.35);color:#fff;margin:6px 0;font-size:15px}
+.nav{position:fixed;bottom:12px;left:12px;right:12px;background:rgba(30,0,60,.95);border:1px solid rgba(255,255,255,.3);border-radius:22px;display:flex;justify-content:space-around;padding:10px 4px;z-index:99}
+.nav button{background:none;border:0;color:#fff;font-size:12px;cursor:pointer}.nav button.active{color:#ff9ad5;font-weight:900}
+.hidden{display:none!important}.small{font-size:12px;opacity:.85;line-height:1.5}.bal{font-size:28px;font-weight:900;color:#ffd700}
+.auth{margin:14px 16px;background:rgba(0,0,0,.4);border-radius:22px;padding:18px}.auth button{border:0;border-radius:999px;padding:12px 16px;font-weight:900;cursor:pointer;background:#ff2d95;color:#fff}
+</style></head><body>
+
+<div class="top"><h1>✨ Ödül &<br>Kazı Kazan</h1><div class="icons"><span onclick="showPage('gift')">🎁</span><span onclick="showPage('notif')">🔔</span></div></div>
+
+<div class="coins"><div class="left"><div style="font-size:38px">🪙</div><div><small>Bakiyen</small><div class="num"><span id="bal">0</span> TL</div></div></div><button class="btn-add" onclick="showPage('deposit')">+ Ekle</button></div>
+
+<!-- ANA SAYFA -->
+<div id="page-home">
+<div class="card wheel-wrap"><div class="wheel-title">✨ GÜNLÜK BONUS ÇARK ✨</div><div class="pointer">▼</div><div class="wheel" id="wheel"><div class="wheel-center">⭐</div></div><div class="small" id="wheelInfo">Düşük Çark - 10 TL • Ortada 50 TL • Yüksek 100 TL</div><div style="display:flex;gap:8px;justify-content:center;margin:10px"><button onclick="setWheel('low')" style="padding:10px 14px;border-radius:999px;border:0;background:#fff;font-weight:800">Düşük 10 TL</button><button onclick="setWheel('mid')" style="padding:10px 14px;border-radius:999px;border:0;background:#ff9a3d;color:#fff;font-weight:800">Orta 50 TL</button><button onclick="setWheel('high')" style="padding:10px 14px;border-radius:999px;border:0;background:#ffd700;font-weight:800">Yüksek 100 TL</button></div><button class="spin-btn" onclick="spin()">✨ ŞİMDİ ÇEVİR</button></div>
+
+<div class="card"><div class="section-title"><h2>🍬 Kazı Kazan Kartları</h2><span onclick="showPage('scratch')">Tümünü Gör →</span></div><div class="scratch-row">
+<div class="scratch-card"><div class="top-img c1">🍬🍭<h3 style="color:#fff">Tatlı<br>Jackpot</h3><p style="color:#fff">Kazıyarak ödülü gör</p></div><div class="win">500 TL'ye kadar kazan</div><button onclick="buyScratch('Tatlı Jackpot',10)" style="width:90%;margin:8px;padding:10px;border-radius:999px;border:0;background:#ff2d95;color:#fff;font-weight:900">10 TL - AL</button></div>
+<div class="scratch-card"><div class="top-img c2">🍬🧸<h3 style="color:#fff">Jelibon<br>Kazan</h3><p style="color:#fff">Şansını dene!</p></div><div class="win">500 TL'ye kadar kazan</div><button onclick="buyScratch('Jelibon Kazan',25)" style="width:90%;margin:8px;padding:10px;border-radius:999px;border:0;background:#ff2d95;color:#fff;font-weight:900">25 TL - AL</button></div>
+<div class="scratch-card"><div class="top-img c3">🍭🎀<h3 style="color:#111">Pamuk<br>Şeker</h3><p style="color:#111">Anında ödül</p></div><div class="win">500 TL'ye kadar kazan</div><button onclick="buyScratch('Pamuk Şeker',50)" style="width:90%;margin:8px;padding:10px;border-radius:999px;border:0;background:#ff2d95;color:#fff;font-weight:900">50 TL - AL</button></div>
+</div></div>
+
+<div class="card auth" id="authBox"><h3 style="margin:0">👤 GİRİŞ / KAYIT</h3><input id="u" placeholder="Kullanıcı adın"><input id="p" type="password" placeholder="Şifren"><button onclick="login()">GİRİŞ YAP</button> <button onclick="register()" style="background:rgba(255,255,255,.2)">KAYIT OL</button><div class="small" id="msg"></div></div>
+</div>
+
+<!-- HEDİYE SAYFASI -->
+<div id="page-gift" class="hidden">
+<div class="card" style="text-align:center"><h2 style="margin:0;font-size:28px">🎁 Günlük Hediyeler</h2><p class="small">Her gün giriş yap, büyük ödüller kazan!</p></div>
+<div class="gift"><h3>ÜCRETSİZ</h3><div>10.000 TL'ye kadar kazan</div><div class="small" id="g1info">Ödülün hazır!</div><div id="g1timer" style="font-weight:900;font-size:20px;margin:6px 0">✅ HAZIR</div><button onclick="claim1()">🎁 ÖDÜLÜ AL</button></div>
+<div class="gift" style="opacity:.95"><h3>🔒 20.000 TL'ye kadar kazanma şansı</h3><div class="small" id="g2r"></div><div class="small" id="g2t">İlerleme: 0/50</div><div class="bar"><div class="fill" id="g2bar" style="width:0%"></div></div><div class="small">50 satın alımda açılacak</div><button onclick="claim2()">🎁 ÖDÜLÜ AL</button></div>
+<div class="gift" style="opacity:.95"><h3>🔒 100.000 TL'ye kadar kazanma şansı</h3><div class="small" id="g3r"></div><div class="small" id="g3t">İlerleme: 0/200</div><div class="bar"><div class="fill" id="g3bar" style="width:0%"></div></div><div class="small">200 satın alımda açılacak</div><button onclick="claim3()">🎁 ÖDÜLÜ AL</button></div>
+<p class="small" style="padding:0 16px">• Ücretsiz ödül 24 saatte bir, birikme yok. 96 saat sonra girsen bile 1 hak olur.<br>• 2. ve 3. hediye satın alım sayısına göre açılır, barlar sıfırlanmaz.</p>
+</div>
+
+<div id="page-scratch" class="hidden"><div class="card"><h2>🎫 Kazı Kazan</h2><div id="inv" class="small">Henüz kartın yok. Ana sayfadan al.</div></div></div>
+<div id="page-deposit" class="hidden"><div class="card auth"><h2>💳 Para Yatırma</h2><p class="small">En az 10 TL, en fazla 5000 TL<br>IBAN: TR31 0006 7010 0000 0025 0393 14<br>Alıcı: Ramazan Yıldırım - Yapı Kredi</p><input id="depAmt" type="number" placeholder="Tutar"><input id="depUser" placeholder="Kullanıcı adın"><button onclick="alert('Yatırım talebin iletildi')">TALEBİ GÖNDER</button></div></div>
+<div id="page-notif" class="hidden"><div class="card"><h2>🔔 Bildirimler</h2><p class="small">Henüz bildirimin yok.</p></div></div>
+<div id="page-profile" class="hidden"><div class="card"><h2>👤 Profil</h2><p>Bakiyen: <b id="bal2">0 TL</b></p><p class="small" id="profUser">Giriş yapmadın.</p></div></div>
+
+<div class="nav">
+<button class="active" onclick="showPage('home',this)">🏠<br>Ana Sayfa</button>
+<button onclick="showPage('home',this)">🎡<br>Çark</button>
+<button onclick="showPage('scratch',this)">🎫<br>Kazı Kazan</button>
+<button onclick="showPage('gift',this)">🎁<br>Hediye</button>
+<button onclick="showPage('profile',this)">👤<br>Profil</button>
+</div>
+
+<script>
+let bal=0, purchases=0, last1=0, used2=0, used3=0, curWheel='low';
+function showPage(p,el){ ['home','gift','scratch','deposit','notif','profile'].forEach(x=>{let e=document.getElementById('page-'+x); if(e) e.classList.toggle('hidden', x!==p)}); document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active')); if(el) el.classList.add('active'); render(); window.scrollTo(0,0); }
+function setWheel(t){curWheel=t; document.getElementById('wheelInfo').textContent = t==='low'?'Düşük Çark - 10 TL':t==='mid'?'Orta Çark - 50 TL':'Yüksek Çark - 100 TL';}
+function spin(){ let cost=curWheel==='low'?10:curWheel==='mid'?50:100; if(bal<cost){alert('Bakiyen yetersiz! Önce bakiye ekle.'); return;} bal-=cost; purchases++; let deg=360*5+Math.floor(Math.random()*360); document.getElementById('wheel').style.transform='rotate('+deg+'deg)'; setTimeout(()=>{ let win=curWheel==='low'?Math.floor(Math.random()*20)+1:curWheel==='mid'?Math.floor(Math.random()*100)+10:Math.floor(Math.random()*300)+50; bal+=win; alert('Tebrikler! '+win+' TL kazandın!'); render(); },3100); render(); }
+function buyScratch(name,price){ if(bal<price){alert('Bakiyen yetersiz!'); return;} bal-=price; purchases++; let win=Math.floor(Math.random()*100)+1; bal+=win; document.getElementById('inv').innerHTML='<b>'+name+'</b> kazıdın, '+win+' TL kazandın! Bakiyen: '+bal+' TL'; alert(name+' kazıdın! '+win+' TL kazandın!'); render(); }
+function login(){ let u=document.getElementById('u').value.trim(); if(!u){alert('Kullanıcı adı yaz');return;} document.getElementById('profUser').textContent='Kullanıcı: '+u; document.getElementById('msg').textContent='Hoş geldin '+u+'!'; render(); }
+function register(){ login(); alert('Kayıt başarılı!'); }
+function claim1(){ let now=Date.now(); if(now-last1<24*3600*1000){alert('Daha beklemen lazım, birikme yok.'); return;} let p=Math.floor(Math.random()*5)+1; last1=now; bal+=p; alert(p+' TL kazandın! 24 saat kilitlendi.'); render(); }
+function claim2(){ let r=Math.floor(purchases/50)-used2; if(r<=0){alert('Önce 50 satın alım lazım. Şu an: '+purchases+'/50'); return;} let p=Math.floor(Math.random()*66)+5; used2++; bal+=p; alert(p+' TL kazandın!'); render(); }
+function claim3(){ let r=Math.floor(purchases/200)-used3; if(r<=0){alert('Önce 200 satın alım lazım. Şu an: '+purchases+'/200'); return;} let p=Math.floor(Math.random()*401)+100; used3++; bal+=p; alert(p+' TL kazandın!'); render(); }
+function render(){ document.getElementById('bal').textContent=bal; document.getElementById('bal2').textContent=bal+' TL'; let now=Date.now(); let left=24*3600*1000-(now-last1); document.getElementById('g1timer').textContent=left>0?'🔒 '+Math.floor(left/3600000)+':'+String(Math.floor(left%3600000/60000)).padStart(2,'0')+':'+String(Math.floor(left%60000/1000)).padStart(2,'0'):'✅ HAZIR'; document.getElementById('g1info').textContent=left>0?'Ödülünü aldın, tekrar için bekle. Birikme yok.':'Ödülün hazır!'; let r2=Math.floor(purchases/50)-used2; document.getElementById('g2t').textContent='İlerleme: '+(purchases%50)+'/50'; document.getElementById('g2bar').style.width=(r2>0?'100':(purchases%50)/50*100)+'%'; document.getElementById('g2r').textContent=r2>0?('🎉 '+r2+' HAKKIN VAR!'):''; let r3=Math.floor(purchases/200)-used3; document.getElementById('g3t').textContent='İlerleme: '+(purchases%200)+'/200'; document.getElementById('g3bar').style.width=(r3>0?'100':(purchases%200)/200*100)+'%'; document.getElementById('g3r').textContent=r3>0?('🎉 '+r3+' HAKKIN VAR!'):''; }
+setInterval(render,1000); render();
+</script></body></html>
